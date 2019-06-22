@@ -1,0 +1,147 @@
+﻿<style type="text/css">
+    #wrap {
+        min-height: 900px;
+    }
+
+    #header {
+        height: 60px;
+    }
+
+        #header .navbar-brand {
+            /*background: url("/assets/img/brac_logoWhite.png") no-repeat center center;
+        background-size: cover;*/
+            background: url("#") no-repeat center center;
+        }
+
+    body {
+        padding-top: 70px;
+    }
+
+    .logo {
+        width: 150px;
+        position: fixed;
+        top: 0;
+        z-index: 10001;
+        margin-left: 35px;
+        margin-top: 3px;
+    }
+
+    .alert {
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5px;
+    }
+
+    #rightmenutrigger {
+        border-left: 0px solid #27292d;
+    }
+
+    #dropdowntoggle {
+        padding-bottom: 28px;
+    }
+
+    .button.close {
+        margin-top: -5px;
+    }
+    .navbar-inverse {
+        background-color:#000066;
+    }
+    .navbar-fixed-top {
+        z-index:500;
+    }
+</style>
+
+<header>
+    <div id="header" class="navbar navbar-inverse navbar-fixed-top" role="banner">
+
+        @*@if (GolbalSession.gblSession != null)*@
+        @*@if ("ssss"== null)
+        {*@
+            <a id="leftmenu-trigger" class="tooltips" data-toggle="tooltip" data-placement="right" title="" data-original-title="Toggle Sidebar"></a>
+        @*}*@
+        @*<a id="rightmenu-trigger" class="tooltips" data-toggle="tooltip" data-placement="left" title="" data-original-title="Toggle Infobar"></a>*@
+
+        <div class="navbar-header pull-left col-sm-5">
+            <span class="label label-danger" id="disconnected"></span>
+            @*<a class="navbar-brand" href="#">*@
+            @*<img class="logo" src="~/assets/img/brac_logoWhite.png" />*@
+            @*</a>*@
+        </div>
+        <div class="col-sm-2" style="text-align: center; margin-top:10px;">
+            @if (GolbalSession.gblSession != null)
+            {
+
+
+                <p style="color:white;text-align:center">
+                    @GolbalSession.gblSession.GlobalCompanyName.ToString()
+                </p>
+
+            }
+        </div>
+
+        <ul class="nav navbar-nav pull-right toolbar">
+            @if (GolbalSession.gblSession != null)
+            { 
+                <li class="dropdown" id="rightmenutrigger">
+                    <a data-toggle="dropdown" id="dropdowntoggle" class="dropdown-toggle" href="#"><span aria-hidden="true" class="glyphicon glyphicon-user"></span>@GolbalSession.gblSession.Name.ToString() <span class="caret"></span></a>
+                    <ul role="menu" class="dropdown-menu">
+                        <li>@Html.ActionLink("User Profile", "Details", "User", new { id =@GolbalSession.gblSession.PId},new{})</li>
+                        <li class="divider"></li>
+                        <li><a href="#" target="_blank">Change Password</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/Account/LogOut">
+                                <i class="icon-off"></i>Logout
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+            }
+          
+            <li>
+                @*<a href="#" id="headerbardropdown"><span><i class="fa fa-level-down"></i></span></a>*@
+            </li>
+            <li class="dropdown demodrop" style="outline: 0px; box-shadow: rgba(43, 188, 224, 0) 0px 0px 13px; outline-offset: 20px;">
+                @*<a href="#" class="dropdown-toggle tooltips" data-toggle="dropdown" data-original-title="" title="">
+                    <i class="fa fa-magic"></i>
+                    </a>*@
+
+                <ul class="dropdown-menu arrow dropdown-menu-form" id="demo-dropdown">
+                    <li>
+                        <label for="demo-header-variations" class="control-label">Header Colors</label>
+                        <ul class="list-inline demo-color-variation" id="demo-header-variations">
+                            <li><a class="color-black" href="javascript:;" data-headertheme="header-black.css"></a></li>
+                            <li><a class="color-dark" href="javascript:;" data-headertheme="default.css"></a></li>
+                            <li><a class="color-red" href="javascript:;" data-headertheme="header-red.css"></a></li>
+                            <li><a class="color-blue" href="javascript:;" data-headertheme="header-blue.css"></a></li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <label for="demo-color-variations" class="control-label">Sidebar Colors</label>
+                        <ul class="list-inline demo-color-variation" id="demo-color-variations">
+                            <li><a class="color-lite" href="javascript:;" data-theme="default.css"></a></li>
+                            <li><a class="color-steel" href="javascript:;" data-theme="sidebar-steel.css"></a></li>
+                            <li><a class="color-lavender" href="javascript:;" data-theme="sidebar-lavender.css"></a></li>
+                            <li><a class="color-green" href="javascript:;" data-theme="sidebar-green.css"></a></li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <label for="fixedheader">Fixed Header</label>
+                        <div id="fixedheader" style="margin-top: 5px; height: 20px; width: 50px;"><div class="toggle-slide active"><div class="toggle-inner" style="width: 80px; margin-left: 0px;"><div class="toggle-on active" style="height: 20px; width: 40px; text-align: center; text-indent: -10px; line-height: 20px;">ON</div><div class="toggle-blob" style="height: 20px; width: 20px; margin-left: -10px;"></div><div class="toggle-off" style="height: 20px; width: 40px; margin-left: -10px; text-align: center; text-indent: 10px; line-height: 20px;">OFF</div></div></div></div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        @Html.Partial("_alerts")
+
+    </div>
+    @*<div style="height: 40px;background-color: #222">
+            <img class="logo" src="~/assets/img/brac_logoWhite.png" />
+        </div>*@
+</header>

@@ -1,0 +1,77 @@
+﻿@model  IEnumerable<MMS.Entities.Models.Customer>
+
+@{
+    ViewBag.Title = "Customer List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#page-leftbar li").removeClass("active");
+
+        $("#liAdmin").addClass("active");
+        $("#liCustomer").addClass("active");
+    });
+</script>
+
+
+
+
+
+@section breadcrumb
+          {
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Customer</li>
+    <li class="active">Customer List</li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+
+
+<style type="text/css">
+    .form-inline .form-control {
+        width: 100%;
+    }
+
+    .form-inline input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .form-inline .form-group {
+        width: 80%;
+    }
+
+    /*.margin {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }*/
+</style>
+
+@using (Html.BeginForm("Index", "Customer", FormMethod.Get))
+{
+
+    <div class="row margin">
+        <div class="col-md-5">
+            @*@if ((GolbalSession.gblSession.UserRights.Exists(x => x.Equals(18))))
+                {*@
+            <p>
+            <p> @Html.ActionLink("Create New Customer", "Create", "Customer", null, new { @class = "btn btn-success" })</p>
+
+            </p>
+            @*}*@
+        </div>
+        <div class="form-inline col-md-6" style="margin-bottom: 20px">
+
+            <div class="form-group">
+                <input type="text" class="form-control " id="searchItem" name="searchItem" placeholder="Search item" value="@ViewData["searchItem"]">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    <div id="grid-list">
+        @{ Html.RenderPartial("_CustomerList", Model); }
+    </div>
+}

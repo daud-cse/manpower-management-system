@@ -1,0 +1,5 @@
+E:\MPMS NEW\Manpower Management System(MMS)\MMS\MMS.Utility\bin\Debug\MMS.Utility.dll
+E:\MPMS NEW\Manpower Management System(MMS)\MMS\MMS.Utility\bin\Debug\MMS.Utility.pdb
+E:\MPMS NEW\Manpower Management System(MMS)\MMS\MMS.Utility\obj\Debug\MMS.Utility.csprojResolveAssemblyReference.cache
+E:\MPMS NEW\Manpower Management System(MMS)\MMS\MMS.Utility\obj\Debug\MMS.Utility.dll
+E:\MPMS NEW\Manpower Management System(MMS)\MMS\MMS.Utility\obj\Debug\MMS.Utility.pdb

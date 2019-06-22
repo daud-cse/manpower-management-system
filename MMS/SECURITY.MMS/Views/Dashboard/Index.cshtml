@@ -1,0 +1,217 @@
+﻿
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    #report .btn-group {
+        width: 100%;
+    }
+</style>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    var projectActivity = [['Name', 'Total', { role: 'style' }]];
+    $(document).ready(function () {
+        var color = ['#b87333', 'silver', 'gold', '#FF99FF', '#99FF66', '#CCCC00', '#FF9966', '#6666FF', '#669999', '#996600', '#666699', '#99CCFF', '#FFCCFF', '#CCCCFF', '#99CC00', '#FFFF99', '#A9A9A9', '#2F4F4F', '#F0FFF0', '#BDB76B', '#EEE8AA', '#708090', '#E6E6FA', '#D2B48C', '#5F9EA0', '#87CEEB', '#B0C4DE', '#FFEFD5', '#ADD8E6', '#FFA07A', '#4B0082', '#FF8C00'];
+        // var url = '@Url.Content("~/Dashboard/GetBarChartValue")';
+
+
+
+        //$.ajax({
+        //    type: "POST",
+        //    url: url,
+        //    dataType: "json",
+        //    success: function (data) {
+
+
+        //        for (var i = 0; i < data.vList.length; i++) {
+        //            projectActivity.push([data.vList[i].Name, parseInt(data.vList[i].TotalCount), color[i]]);
+        //        }
+
+
+
+        //        if (data.vList.length > 0) {
+        //            drawBasic(projectActivity);
+        //        }
+
+
+        //    },
+        //    error: function (error) {
+        //        alert(error);
+        //    }
+        //});
+    });
+    google.load('visualization', '1', { packages: ['corechart', 'bar'] });
+    //google.setOnLoadCallback(drawBasic(projectActivity));
+    function drawBasic(projectActivity) {
+        // var data = google.visualization.arrayToDataTable(projectActivity);
+        //var   data = google.visualization.arrayToDataTable([
+        //    ["sss", '2010 Population', ],
+        //    ['New York City, NY', 8175000],
+        //    ['Los Angeles, CA', 3792000],
+        //    ['Chicago, IL', 2695000],
+        //    ['Houston, TX', 2099000],
+        //    ['Philadelphia, PA', 1526000]
+        //  ]);
+        var options = {
+            title: 'Overall Projects Status',
+            chartArea: { width: '70%' },
+            hAxis: {
+                title: 'MMS Status',
+                minValue: 2
+            },
+            vAxis: {
+                title: 'Total Projects'
+            }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_div'));
+        chart.draw(data, options);
+    }
+</script>
+
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+
+<div class="container">
+    <div class="row">
+        <div style="height:20px">
+        </div>
+    </div>
+    <div class="row">
+
+
+        <div class="col-md-12">
+            <div class="row">
+
+
+
+                <div class="col-md-3 col-xs-12 col-sm-6">
+
+                    <a href="#" class="info-tiles tiles-success">
+                       
+                        <div class="tiles-heading">Total User</div>
+
+                        <div class="tiles-body-alt">
+                            @*<i class="fa fa-home"></i>*@
+                            <div class="text-center">10</div>
+                            <small>Total User</small>
+                        </div>
+                        <div class="tiles-footer"></div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+
+                    <a href="#" class="info-tiles tiles-danger">
+                      
+                        <div class="tiles-heading">Total Active User</div>
+
+                        <div class="tiles-body-alt">
+                            @*<i class="fa fa-home"></i>*@
+                            <div class="text-center">10</div>
+                            <small>Total Active User</small>
+                        </div>
+                        <div class="tiles-footer"></div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                    <a href="#" class="info-tiles tiles-alizarin">
+                       
+                     
+                            <div class="tiles-heading">Total Role</div>
+                           
+                            <div class="tiles-body-alt">
+                                @*<i class="fa fa-shopping-cart"></i>*@
+                                <div class="text-center">20</div>
+                                <small>Total Role</small>
+                            </div>
+                            <div class="tiles-footer"></div>
+                      
+
+                    </a>
+                </div>
+
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                    <a href="#" class="info-tiles tiles-orange">
+
+                        <div class="tiles-heading">Right</div>
+                        <div class="tiles-body-alt">
+                            @*<i class="fa fa-archive"></i>*@
+
+                            <div class="text-center">0</div>
+                            <small>Right</small>
+                        </div>
+                        <div class="tiles-footer"></div>
+                    </a>
+                </div>
+
+            </div>
+        </div>      
+
+        <div class="row">
+            <div style="height:20px">
+            </div>
+        </div>
+        <div id="report" class="row">
+            <div class="col-md-6">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12 clearfix">
+                                @*<h4 class="pull-left" style="margin: 0 0 20px;">MMS Status<small> (Bar Chart)</small></h4>*@
+                                <div class="btn-group">
+                                    <div id="chart_div" style="height:350px">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-grape">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12 clearfix">
+                                @*<h4 class="pull-left" style="margin: 0 0 20px;">MMS Status<small> (Pie Chart)</small></h4>*@
+                                <div class="btn-group">
+
+                                    <div id="piechart_div" style="height:350px">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div style="height:100px">
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div style="height:100px">
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+}*@*@*@
+

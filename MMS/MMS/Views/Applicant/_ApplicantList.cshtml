@@ -1,0 +1,157 @@
+﻿@using MvcPaging
+@model MvcPaging.IPagedList<MMS.Entities.Models.Applicant>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>
+                Agent Name
+            </th>
+            <th>
+                Agent Mobile No
+            </th>
+            <th>
+                Applicant Id
+            </th>
+            <th>
+                Applicant Name
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().PreRefApplicantId)
+            </th>
+            <th>
+                Passport No
+            </th>
+            <th>
+                Progress
+            </th>
+            <th>
+                Applicant Mobile No
+            </th>
+
+            <th>
+                Current Status
+            </th>
+            <th>
+                Next Status
+            </th>
+            <th>
+                Country Name
+            </th>
+            <th>
+                Action
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Agent.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Agent.Mobile)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.ActionLink(@item.Name, "GetApplicantDetailsSinglePage", "MPMSReports", new { AgentId = item.AgentID, ApplicantID = item.ID }, new { target = "_blank" })
+
+                </td>
+                <td>
+
+
+                    @if (@item.PreRefApplicantId == null)
+                    {
+
+                    }
+                    else
+                    {
+                        @Html.ActionLink(@item.PreRefApplicantId, "GetApplicantDetailsSinglePage", "MPMSReports", new { AgentId = item.AgentID, ApplicantID = item.ID }, new { target = "_blank" })
+                    }
+
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PassportNo)
+                </td>
+                <td>
+                    <div class="progress">
+                        <!-- create a progress bar using class progress -->
+                        <div class="progress-bar" role="progressbar" aria-valuenow="@item.PercentageOfComplete"
+                             aria-valuemin="0" aria-valuemax="100" style="width: @(item.PercentageOfComplete)%;">
+                            <!-- width set in percentage using attribute style -->
+                            @item.PercentageOfComplete %
+
+                            <span class="sr-only">70% Complete</span>
+
+                        </div>
+                    </div>
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicantPhoneNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location1.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Country.Name)
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS075")))
+                            {
+                                <li>@Html.ActionLink("Applicant Edit", "Edit", "ApplicantVM", new { id = item.ID }, null) </li>
+                                <li class="divider"></li>
+                            }
+                            @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS076")))
+                            {
+                                <li>@Html.ActionLink("Applicant Location Change", "GetApplicantLocation", "LocationChangeVM", new { Id = item.ID, IsApplicant = true }, new { })</li>
+                                 <li class="divider"></li>
+                            }
+                           
+                            @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS077")))
+                            {
+                                <li>@Html.ActionLink("Applicant Reports", "GetApplicantDetailsSinglePage", "MPMSReports", new { AgentId = item.AgentID, ApplicantID = item.ID }, new { target = "_blank" })</li>
+                                <li class="divider"></li>
+                            }
+                        </ul>
+                    </div>
+
+
+                </td>
+            </tr>
+
+        }
+    <tbody>
+</table>
+<div class="pager">
+    @Html.Raw(Html.Pager(
+            new Options
+            {
+                PageSize = Model.PageSize,
+                TotalItemCount = Model.TotalItemCount,
+                CurrentPage = Model.PageNumber,
+                ItemTexts = new ItemTexts() { Next = "Next", Previous = "Previous" },
+                ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+                TooltipTitles = new TooltipTitles() { Next = "Next page {0}", Previous = "Previous page {0}", Page = "Go to page {0}" },
+                Size = Size.normal,
+                Alignment = Alignment.centered,
+                IsShowControls = true,
+                IsShowFirstLast = true,
+                IsShowPages = true
+            }, new { }))
+    <div class="well">
+        Showing <span class="badge badge-success">@Model.ItemStart</span> to <span class="badge badge-success">@Model.ItemEnd</span>
+        of <span class="badge badge-info">@Model.TotalItemCount</span> entries
+    </div>
+</div>

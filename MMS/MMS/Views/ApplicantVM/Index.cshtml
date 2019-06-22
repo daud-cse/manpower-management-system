@@ -1,0 +1,55 @@
+﻿@model  MMS.Entities.ViewModels.ApplicantVM
+
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb
+          {
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Agent</li>
+    <li class="active">Agent List</li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+
+
+@Html.ActionLink("Create New", "Create", new { }) @*<text>|</text>*@
+
+<table class="table">
+    <tr>
+        <th>
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().appicant.ID)*@
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().appicant.VisaTypeID)*@
+        </th>
+       
+      
+        <th></th>
+    </tr>
+
+    @*@foreach (var item in Model.)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.AgentType.Name)
+            </th>
+          
+
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <text>|</text>
+
+                @Html.ActionLink("Delete", "Delete", "ProjectsDBR", new { id = item.ID }, null)
+
+
+
+            </td>
+        </tr>
+    }*@
+
+</table>

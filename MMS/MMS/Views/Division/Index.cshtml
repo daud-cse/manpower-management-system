@@ -1,0 +1,59 @@
+﻿@model IEnumerable<MMS.Entities.Models.Division>
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Agent</li>
+    <li class="active">Agent List</li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+
+
+@Html.ActionLink("Create New", "Create", new { }) @*<text>|</text>*@
+
+<table class="table">
+    <tr>
+
+
+
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <
+            <td>
+
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, null) <text>|</text>
+
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, null)
+
+
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+

@@ -1,0 +1,141 @@
+﻿@using MvcPaging
+@model MMS.Entities.ViewModels.SearchApplicantVM
+@*@model MvcPaging.IPagedList<MMS.Entities.Models.Applicant>*@
+@{
+    ViewBag.Title = "Agent Wise Applicant List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+<script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+        $("#page-leftbar li").removeClass("active");
+        $("#liReports").addClass("active");
+        $("#liAgentwiseApplicantList").addClass("active");
+        
+
+        $("#AgentId").attr('data-live-search', true);
+        $("#LocationId").attr('data-live-search', true);        
+    });
+
+
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">Agent Wise Applicant List</li>
+}
+@*@section title
+    {
+        @ViewBag.Title
+    }*@
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+
+    .progress {
+        height: 20px;
+    }
+</style>
+
+@using (Html.BeginForm("GetAgentWiseApplicantList", "MPMSReports", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">@ViewBag.Title </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.AgentId, new { @class = "col-sm-2 control-label required" })
+                    <div class="col-sm-3">
+                        @Html.DropDownListFor(model => model.AgentId, new SelectList(Model.kvpAgent, "Key", "Value", Model.AgentId), "Select Agent", new { @class = "selectpicker show-tick form-control" })
+                        @Html.ValidationMessageFor(model => model.AgentId)
+                    </div>
+                    @*@Html.LabelFor(model => model.ApplicantId, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-1">
+                        @Html.TextBoxFor(model => model.ApplicantId, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApplicantId)
+                    </div>
+                    @Html.LabelFor(model => model.PassportNo, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.PassportNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PassportNo)
+                    </div>*@
+
+                </div>
+                <div class="form-group">
+                    @*@Html.LabelFor(model => model.PreRefApplicantId, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-1">
+                        @Html.TextBoxFor(model => model.PreRefApplicantId, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PreRefApplicantId)
+                    </div>*@
+                    @Html.LabelFor(model => model.LocationId, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-3">
+                        @Html.DropDownListFor(model => model.LocationId, new SelectList(Model.kvpLocation, "Key", "Value", Model.LocationId), "Select Activity Name", new { @class = "selectpicker show-tick form-control" })
+                        @Html.ValidationMessageFor(model => model.LocationId)
+                    </div>                 
+                </div>
+               
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="btn-toolbar">
+                        <input type="submit" value="Search" onclick="target= '_blank';" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+   
+}
+
+@section Scripts {
+
+   
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+}

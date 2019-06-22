@@ -1,0 +1,147 @@
+﻿@using MvcPaging
+@model MvcPaging.IPagedList<MMS.Entities.Models.CompanyWiseApplicant>
+@{
+    ViewBag.Title = "Company Wise Applicant Map";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#page-leftbar li").removeClass("active");
+
+        $("#liApplicant").addClass("active");
+        $("#liCompanyApplicant").addClass("active");
+    });
+</script>
+
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Applicant Operation</li>
+    <li class="active">Company Wise Applicant Map</li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+<style type="text/css">
+    .form-inline .form-control {
+        width: 100%;
+    }
+
+    .form-inline input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .form-inline .form-group {
+        width: 80%;
+    }
+
+    /*.margin {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }*/
+</style>
+@using (Html.BeginForm("Index", "CompanyWiseApplicant", FormMethod.Get))
+{
+    <div class="row margin">
+        <div class="col-md-5">
+
+
+            <p> @Html.ActionLink("Create New", "Create", "CompanyWiseApplicant", null, new { @class = "btn btn-success" })</p>
+
+
+
+        </div>
+        <div class="form-inline col-md-6" style="margin-bottom: 20px">
+
+            <div class="form-group">
+                <input type="text" class="form-control " id="searchItem" name="searchItem" placeholder="Search item" value="@ViewData["searchItem"]">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Company.Name)
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Applicant.ID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Applicant.Name)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Applicant.PassportNo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().IsActive)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.ID)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.PassportNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsActive)
+                    </td>
+                    <td>
+
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-success btn-xs" }) <text>|</text>
+
+                        @Html.ActionLink("Delete", "Delete", "CompanyWiseApplicant", new { id = item.ID }, new { @class = "btn btn-success btn-xs" })
+                    </td>
+                </tr>
+            }
+        <tbody>
+    </table>
+
+    <hr />
+    <div class="pager">
+        @Html.Raw(Html.Pager(
+                 new Options
+                 {
+                     PageSize = Model.PageSize,
+                     TotalItemCount = Model.TotalItemCount,
+                     CurrentPage = Model.PageNumber,
+                     ItemTexts = new ItemTexts() { Next = "Next", Previous = "Previous" },
+                     ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+                     TooltipTitles = new TooltipTitles() { Next = "Next page {0}", Previous = "Previous page {0}", Page = "Go to page {0}" },
+                     Size = Size.normal,
+                     Alignment = Alignment.centered,
+                     IsShowControls = true,
+                     IsShowFirstLast = true,
+                     IsShowPages = true
+                 }, new { searchItem = ViewData["searchItem"] }))
+        <div class="well">
+            Showing <span class="badge badge-success">@Model.ItemStart</span> to <span class="badge badge-success">@Model.ItemEnd</span>
+            of <span class="badge badge-info">@Model.TotalItemCount</span> entries
+        </div>
+    </div>
+}
+
+
+
+

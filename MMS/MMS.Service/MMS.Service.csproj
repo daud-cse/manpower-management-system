@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EBE6B434-8FAE-4228-9E4A-767C7D970551}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MMS.Service</RootNamespace>
+    <AssemblyName>MMS.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ModelServices\AddressService.cs" />
+    <Compile Include="ModelServices\AgentContentService.cs" />
+    <Compile Include="ModelServices\AgentService.cs" />
+    <Compile Include="ModelServices\AgentTypeService.cs" />
+    <Compile Include="ModelServices\ApplicantCheckListService.cs" />
+    <Compile Include="ModelServices\ApplicantContentService.cs" />
+    <Compile Include="ModelServices\ApplicantFileLotService.cs" />
+    <Compile Include="ModelServices\ApplicantLocationDetailService.cs" />
+    <Compile Include="ModelServices\ApplicantLotStatusService.cs" />
+    <Compile Include="ModelServices\ApplicantMovementResultHistoryService.cs" />
+    <Compile Include="ModelServices\ApplicantMovementService.cs" />
+    <Compile Include="ModelServices\ApplicantService.cs" />
+    <Compile Include="ModelServices\ApplicantTypeService.cs" />
+    <Compile Include="ModelServices\BankAccountInfoService.cs" />
+    <Compile Include="ModelServices\BankAccountTypeService.cs" />
+    <Compile Include="ModelServices\CheckListGroupMappingService.cs" />
+    <Compile Include="ModelServices\CheckListGroupService.cs" />
+    <Compile Include="ModelServices\CheckListService.cs" />
+    <Compile Include="ModelServices\CompanyContentService.cs" />
+    <Compile Include="ModelServices\CompanyService.cs" />
+    <Compile Include="ModelServices\CompanyTypeService.cs" />
+    <Compile Include="ModelServices\CompanyWiseApplicantService.cs" />
+    <Compile Include="ModelServices\ComplainService.cs" />
+    <Compile Include="ModelServices\ComplainTypeService.cs" />
+    <Compile Include="ModelServices\ContentDetailService.cs" />
+    <Compile Include="ModelServices\ContentService.cs" />
+    <Compile Include="ModelServices\ContentTypeService.cs" />
+    <Compile Include="ModelServices\ControlTypeService.cs" />
+    <Compile Include="ModelServices\CountryService.cs" />
+    <Compile Include="ModelServices\CustomerService.cs" />
+    <Compile Include="ModelServices\CustomerTypeService.cs" />
+    <Compile Include="ModelServices\DesignationService.cs" />
+    <Compile Include="ModelServices\DistrictService.cs" />
+    <Compile Include="ModelServices\DivisionService.cs" />
+    <Compile Include="ModelServices\EmployeeInfoService.cs" />
+    <Compile Include="ModelServices\FMS_DayOpenCloseCheckListService.cs" />
+    <Compile Include="ModelServices\FMS_DayOpenCloseService.cs" />
+    <Compile Include="ModelServices\FMS_DayWiseCheckListDetailsService.cs" />
+    <Compile Include="ModelServices\FMS_GLAccountService.cs" />
+    <Compile Include="ModelServices\FMS_GLSubsidyTypeMapService.cs" />
+    <Compile Include="ModelServices\FMS_PaymentReceivedTypeService.cs" />
+    <Compile Include="ModelServices\FMS_SettingsService.cs" />
+    <Compile Include="ModelServices\FMS_SubsidyAccountService.cs" />
+    <Compile Include="ModelServices\FMS_SubsidyTypeService.cs" />
+    <Compile Include="ModelServices\FMS_TransactionDetService.cs" />
+    <Compile Include="ModelServices\FMS_TransactionService.cs" />
+    <Compile Include="ModelServices\FMS_VoucherTypeService.cs" />
+    <Compile Include="ModelServices\FMS_VoucherTypeWiseOppositeGLMapService.cs" />
+    <Compile Include="ModelServices\GlobalCompanyService.cs" />
+    <Compile Include="ModelServices\LocationMapDetailService.cs" />
+    <Compile Include="ModelServices\LocationService.cs" />
+    <Compile Include="ModelServices\MailInfoService.cs" />
+    <Compile Include="ModelServices\MaritalStatusService.cs" />
+    <Compile Include="ModelServices\MessageAreaTypeService.cs" />
+    <Compile Include="ModelServices\MessageInfoService.cs" />
+    <Compile Include="ModelServices\MessageMailMasterService.cs" />
+    <Compile Include="ModelServices\ModuleService.cs" />
+    <Compile Include="ModelServices\MovementResultService.cs" />
+    <Compile Include="ModelServices\NationalityService.cs" />
+    <Compile Include="ModelServices\PassportInfoService.cs" />
+    <Compile Include="ModelServices\PassPortTypeService.cs" />
+    <Compile Include="ModelServices\RightssService.cs" />
+    <Compile Include="ModelServices\RoleRightssService.cs" />
+    <Compile Include="ModelServices\RoleService.cs" />
+    <Compile Include="ModelServices\RPOTypeService.cs" />
+    <Compile Include="ModelServices\SendingAreaTypeService.cs" />
+    <Compile Include="ModelServices\SexService.cs" />
+    <Compile Include="ModelServices\StatusService.cs" />
+    <Compile Include="ModelServices\UpazilaService.cs" />
+    <Compile Include="ModelServices\UserModuleService.cs" />
+    <Compile Include="ModelServices\UserService.cs" />
+    <Compile Include="ModelServices\FMS_VoucherTypeWiseGLMapService.cs" />
+    <Compile Include="ModelServices\VendorInfoService.cs" />
+    <Compile Include="ModelServices\VendorTypeService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModelServices\AgentVMService.cs" />
+    <Compile Include="ViewModelServices\ApplicantVMService.cs" />
+    <Compile Include="ViewModelServices\DashboardVMService.cs" />
+    <Compile Include="ViewModelServices\FMS_DayOpenCloseVMService.cs" />
+    <Compile Include="ViewModelServices\FMS_SubSidyVMService.cs" />
+    <Compile Include="ViewModelServices\FMS_TransactionVMService.cs" />
+    <Compile Include="ViewModelServices\LocationChangeVMService.cs" />
+    <Compile Include="ViewModelServices\MessageSendVMService.cs" />
+    <Compile Include="ViewModelServices\ProcessVMService.cs" />
+    <Compile Include="ViewModelServices\SearchApplicantVMService.cs" />
+    <Compile Include="ViewModelServices\SearchPassportInfoVMService.cs" />
+    <Compile Include="ViewModelServices\SubsidyMappedVMService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\Repository.Pattern.Ef6\Repository.Pattern.Ef6.csproj">
+      <Project>{f68a1d19-93fb-47c1-a22b-42bea3e4fd8c}</Project>
+      <Name>Repository.Pattern.Ef6</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Source\Repository.Pattern\Repository.Pattern.csproj">
+      <Project>{6e682a14-c872-4813-b620-76e108dea683}</Project>
+      <Name>Repository.Pattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Source\Service.Pattern\Service.Pattern.csproj">
+      <Project>{86f86650-ee3c-4372-8fec-40c2fe015022}</Project>
+      <Name>Service.Pattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MMS.Entities\MMS.Entities.csproj">
+      <Project>{6753e0e5-378d-4a98-babc-37732289a406}</Project>
+      <Name>MMS.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MMS.Utility\MMS.Utility.csproj">
+      <Project>{5a7a0ae9-f97c-4dd2-9e46-c6368100e42d}</Project>
+      <Name>MMS.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

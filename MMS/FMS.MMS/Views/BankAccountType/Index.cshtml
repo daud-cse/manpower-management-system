@@ -1,0 +1,94 @@
+﻿@model IEnumerable<MMS.Entities.Models.BankAccountType>
+@{
+    ViewBag.Title = "Bank Account Type List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#page-leftbar li").removeClass("active");
+
+        $("#liAdmin").addClass("active");
+        $("#liBankAccountType").addClass("active");
+    });
+</script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Agent</li>
+    <li class="active">Agent List</li>
+}
+
+@section title
+{
+    @ViewBag.Title
+}
+<style type="text/css">
+    .form-inline .form-control {
+        width: 100%;
+    }
+
+    .form-inline input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .form-inline .form-group {
+        width: 80%;
+    }
+</style>
+
+<div class="row margin">
+    <div class="col-md-5">
+
+        <p>
+        <p> @Html.ActionLink("Create New", "Create", "BankAccountType", null, new { @class = "btn btn-success" })</p>
+
+        </p>
+
+    </div>
+    <div class="form-inline col-md-6" style="margin-bottom: 20px">
+
+        <div class="form-group">
+            <input type="text" class="form-control " id="searchItem" name="searchItem" placeholder="Search item" value="@ViewData["searchItem"]">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</div>
+
+<table class="table table-bordered table-hover">
+    <tr>
+
+
+
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().BankAccountTypeId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().BankAccountTypeName)
+        </th>
+       
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankAccountTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankAccountTypeName)
+            </td>
+          
+            <td>
+
+                @Html.ActionLink("Edit", "Edit", new { id = item.BankAccountTypeId }, new { @class = "btn btn-success btn-xs" })
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+

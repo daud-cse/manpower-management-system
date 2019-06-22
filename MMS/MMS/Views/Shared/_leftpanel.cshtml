@@ -1,0 +1,166 @@
+﻿<nav id="page-leftbar" role="navigation">
+    <!-- BEGIN SIDEBAR MENU -->
+    <ul class="acc-menu" id="sidebar" style="top: 40px;">
+        <li id="search">
+            <a href="javascript:;"><i class="fa fa-search opacity-control"></i></a>
+            <form>
+                <input type="text" readonly class="search-query" placeholder="">
+                <button type="submit">
+                    @*<i class="fa fa-search"></i>*@
+                </button>
+            </form>
+        </li>
+        <li class="divider"></li>
+        <li class="active" id="liDashBoard"><a href="~/Dashboard/"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+
+        @if (GolbalSession.gblSession != null)
+        {
+            if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS060") || x.Equals("MPMS061") || x.Equals("MPMS062") || x.Equals("MPMS063") || x.Equals("MPMS064") || x.Equals("MPMS065") || x.Equals("MPMS066")))
+            {
+                <li id="liAdmin" class="hasChild">
+                    <a href="javascript:;"><i class="fa fa-th"></i> <span>Administration</span> </a>
+                    <ul class="acc-menu">
+
+                        <li id="liMessageMailSent">@Html.ActionLink("Message Mail Sent", "VmMessageMail", "MessageMailMaster")</li>
+
+
+                        <li id="liAgentType">@Html.ActionLink("Agent Type Setup", "Index", "Home")</li>
+
+                        <li id="liAgentApplicantType">@Html.ActionLink("Applicant Type Setup", "Index", "ApplicantType")</li>
+
+                        <li id="liCheckList">@Html.ActionLink("Check List", "Index", "CheckList")</li>
+
+                        <li id="liCheckListGroupMapping">@Html.ActionLink("Check List Group Map", "Create", "CheckListGroupMapping")</li>
+
+                        <li id="liLocation">@Html.ActionLink("Location Setup", "Index", "Location")</li>
+
+                        <li id="liLocationMapDetail">@Html.ActionLink("Location Map Detail", "Index", "LocationMapDetail")</li>
+
+
+                        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS060")))
+                        {
+
+
+                            <li id="liAgent">@Html.ActionLink("Agent Setup", "Index", "Agent")</li>
+                        }
+                        @*@if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS060")))
+                            {*@
+
+
+
+                            @*}*@
+
+                            @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS061")))
+                            {
+                                <li id="liCustomer">@Html.ActionLink("Customer Setup", "Index", "Customer")</li>
+                            }
+                            @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS062")))
+                            {
+                                <li id="liCompany">@Html.ActionLink("Company Setup", "Index", "Company")</li>
+                            }
+
+                            @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS063")))
+                            {
+
+                                <li id="liComplainType">@Html.ActionLink("Complain Type Setup", "Index", "ComplainType")</li>
+                            }
+                            @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS064")))
+                            {
+                                <li id="liRoleRight"><a href='#'>Role Right Setup</a></li>
+                            }
+                            @*@if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS065")))
+                                {*@
+                            <li id="liCountry">@Html.ActionLink("Country Setup", "Index", "Country")</li>
+
+                            @*}*@
+
+                            @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS066")))
+                            {
+                                <li><a href='#'>Currency Setup</a></li>
+                            }
+
+                        </ul>
+                    </li>
+            }
+
+            if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS067") || x.Equals("MPMS068") || x.Equals("MPMS069") || x.Equals("MPMS070") || x.Equals("MPMS071")))
+            {
+                <li id="liApplicant" class="hasChild">
+                    <a href="javascript:;"><i class="fa fa-th"></i> <span>Applicant Operation</span> </a>
+                    <ul class="acc-menu">
+                        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS067")))
+                        {
+                            <li id="liApplicantMapping">
+                                @Html.ActionLink("Aplicant Mapping", "Index", "Applicant")
+                            </li>
+                        }
+                        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS068")))
+                        {
+                            <li id="liApplicantLocationChange">
+                                @Html.ActionLink("Applicant Location Change", "CreateApplicantLocation", "LocationChangeVM")
+                            </li>
+                        }
+                        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS069")))
+                        {
+                            <li id="liCustomerPassport">
+                                @Html.ActionLink("Customer Passport", "Index", "PassportInfo")
+                            </li>
+                        }
+                        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS070")))
+                        {
+                            <li id="liComplainBox">
+                                @Html.ActionLink("Complain Box", "Index", "Complain")
+                            </li>
+                        }
+                        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS071")))
+                        {
+                            <li id="liCompanyApplicant">
+                                @Html.ActionLink("Company Applicant", "Index", "CompanyWiseApplicant")
+                            </li>
+                        }
+                    </ul>
+
+                </li>
+            }
+            if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS072") || x.Equals("MPMS073")))
+            {
+                <li id="liApplicantSearch" class="hasChild">
+                    <a href="javascript:;"><i class="fa fa-th"></i> <span>Search</span> </a>
+                    <ul class="acc-menu">
+                        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS072")))
+                        {
+                            <li id="liApplicantSearchSubMenu">
+                                @Html.ActionLink("Applicant Search", "createApplicantSearch", "Applicant")
+                            </li>
+                        }
+                        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS073")))
+                        {
+                            <li id="liPassportSearch">
+                                @Html.ActionLink("Passport Search", "CreateSearchPassportInfo", "PassportInfo")
+                            </li>
+                        }
+
+
+                    </ul>
+                </li>
+            }
+            if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS074")))
+            {
+                <li id="liReports" class="hasChild">
+                    <a href="javascript:;"><i class="fa fa-th"></i> <span>Reports</span> </a>
+                    <ul class="acc-menu">
+                        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("MPMS074")))
+                        {
+                            <li id="liAgentwiseApplicantList">
+                                @Html.ActionLink("Agent wise Applicant List", "AgentWiseApplicantList", "MPMSReports")
+                            </li>
+                        }
+
+                    </ul>
+                </li>
+            }
+
+        }
+    </ul>
+
+</nav>

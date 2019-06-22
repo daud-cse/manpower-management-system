@@ -1,0 +1,163 @@
+﻿@model MMS.Entities.Models.User
+
+@{
+    ViewBag.Title = "User Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+    });
+
+
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">User Setup</li>
+}
+@*@section title
+    {
+        @ViewBag.Title
+    }*@
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+<p> @Html.ActionLink("Go Back to User List", "Index", null, null, new { @class = "btn btn-success btn-xs" })</p>
+<hr />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="panel panel-info">
+
+        <div class="panel-heading">
+            @ViewBag.Title.ToString()
+
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-sm-12">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">User Info</legend>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.UserName, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.UserName)
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.UserAccountsId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(model => model.UserAccountsId, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.UserAccountsId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.Password, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(model => model.Password, new { @class = "form-control required" })
+                                @Html.ValidationMessageFor(model => model.Password)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.RoleId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.DropDownListFor(model => model.RoleId, new SelectList(Model.kvpRole, "Key", "Value", Model.RoleId), "Select Role", new { @class = "" })
+                                @Html.ValidationMessageFor(model => model.RoleId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.PhoneNo, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(model => model.PhoneNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PhoneNo)
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.EmailId, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(model => model.EmailId, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.EmailId)
+                            </div>
+                        </div>                       
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsActive) @Html.LabelFor(model => model.IsActive)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>                                               
+                    </fieldset>
+                </div>               
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-3">
+                    <div class="btn-toolbar">
+                        <input type="submit" value="Create" class="btn-primary btn" onclick=" return AddConfirm()" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

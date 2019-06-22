@@ -1,0 +1,97 @@
+﻿@model MMS.Entities.Models.BankAccountType
+
+@{
+    ViewBag.Title = "Bank Account Type Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#page-leftbar li").removeClass("active");
+
+        $("#liAdmin").addClass("active");
+        $("#liBankAccountType").addClass("active");
+    });
+</script>
+
+
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">@ViewBag.Title</li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+</style>
+<p> @Html.ActionLink("Back to List", "Index", null, null, new { @class = "btn btn-success" })</p>
+<hr />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x=>x.BankAccountTypeId)
+
+    <div class="row">
+        @Html.ValidationSummary(true)
+
+
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.BankAccountTypeName, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.BankAccountTypeName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.BankAccountTypeName)
+            </div>
+        </div>
+
+
+        @*<div class="form-group">
+                <label for="checkbox" class="col-sm-3 control-label"></label>
+                <div class="col-sm-4">
+                    <div class="checkbox block">
+                        <label>
+                            @Html.CheckBoxFor(model => model.IsActive) @Html.LabelFor(model => model.IsActive)
+                        </label>
+                    </div>
+                </div>
+            </div>*@
+
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div class="btn-toolbar">
+                    <input type="submit" value="Create" class="btn-primary btn" onclick=" return AddConfirm()" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+

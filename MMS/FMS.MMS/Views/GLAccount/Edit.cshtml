@@ -1,0 +1,177 @@
+﻿@model MMS.Entities.Models.FMS_GLAccount
+
+@{
+    ViewBag.Title = "GL Accoount Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">GL Accoount Edit</li>
+}
+@*@section title
+    {
+        @ViewBag.Title
+    }*@
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+<p> @Html.ActionLink("Go Back to GL Accoount tree", "Index", null, null, new { @class = "btn btn-success btn-xs" })</p>
+<hr />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(x => x.GLAccountId)
+    @Html.HiddenFor(x => x.GLAccountCode)  
+    @Html.HiddenFor(x => x.LevelCode)
+    @Html.HiddenFor(x => x.OpeningDate)
+    @Html.HiddenFor(x => x.ParentAccountId)
+    @Html.HiddenFor(x => x.SortOrder)
+    @Html.HiddenFor(x => x.SubCtrlPrefix)
+     @Html.HiddenFor(x => x.AccountTypeID)
+    @Html.HiddenFor(x => x.ReportTypeID)
+    @Html.HiddenFor(x => x.DrCr)
+    
+    <div class="panel panel-info">
+
+        <div class="panel-heading">
+            @ViewBag.Title.ToString()
+
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-sm-12">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">Vendor Info</legend>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.GLAccountCode, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(model => model.GLAccountCode, new { @class = "form-control",@readonly="readonly" })
+                                @Html.ValidationMessageFor(model => model.GLAccountCode)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.CurrentBalance, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(model => model.CurrentBalance, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.CurrentBalance)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.GLAccountName, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.TextAreaFor(model => model.GLAccountName, new { @class = "form-control required" })
+                                @Html.ValidationMessageFor(model => model.GLAccountName)
+                            </div>
+                        </div>                     
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.GLAccountTreeName, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.TextAreaFor(model => model.GLAccountTreeName, new { @class = "form-control required" })
+                                @Html.ValidationMessageFor(model => model.GLAccountTreeName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsActive) @Html.LabelFor(model => model.IsActive)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsSubsidyExist) @Html.LabelFor(model => model.IsSubsidyExist)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.HasChild) @Html.LabelFor(model => model.HasChild)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-3">
+                    <div class="btn-toolbar">
+                        <input type="submit" value="Create" class="btn-primary btn" onclick=" return AddConfirm()" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

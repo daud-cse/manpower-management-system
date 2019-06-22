@@ -1,0 +1,644 @@
+﻿@model MMS.Entities.ViewModels.FMS_TransactionVM
+@using MMS.Utility;
+@{
+    ViewBag.Title = @Model.Transaction.FMS_VoucherType.VoucherTypeName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var IsSubsidyExsit=false;
+        var TransactionVM = {
+            //<button type='button' class='EditFollowupAction btn btn-primary'><span class='glyphicon glyphicon-remove-sign'></span>Edit</button>
+            listTransactionDet: "<tr><td style='display:none;'><input type='hidden' id='GlAccountId' name=[GlAccountIdName].SLNO value=[GlAccountId]></td><td style='display:none;'><input type='hidden' id='SLNO' name=[SLNOName].SLNO value=[SLNO]></td> <td style='display:none;'><input type='hidden' id='SubsidyId' name=[SubsidyIdName].SLNO value=[SubsidyId]> </td><td>[GlAccountName]</td><td>[SubsidyName]</td><td>[DrAmount]</td><td>[CrAmount]</td><td>[Particulars]</td><td><button type='button' class='remove btn btn-danger btn-sm'><span class='glyphicon glyphicon-remove-sign'></span>Delete</button></td></tr>",
+            TransactionDet: [],
+            Initialize: function () {
+                $("#divSubsidyAccountId").hide();
+
+                var $tabs = $('#tblApplicant');
+                $("#GLAccountDDL").attr('data-live-search', true);
+                $("tbody.connectedSortable").sortable({
+                    connectWith: ".connectedSortable",
+                    //items: "> tr:not(:first)",
+                    appendTo: $tabs,
+                    helper: "clone",
+                    zIndex: 999990
+                }).disableSelection();
+                $('.input-group.date').datepicker({
+                    todayBtn: "linked",
+                    language: "it",
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd/mm/yyyy'
+                });
+                var IsOppsiteEntry=false;
+                var IsSubsidyExist='@Model.VoucherTypeWiseGLMap.FMS_GLAccount.IsSubsidyExist';
+                TransactionVM.VoucherTypeWiseUILoad(@Model.Transaction.VoucherTypeId,IsOppsiteEntry,IsSubsidyExist);
+                $('#GLAccountDDL').change(function (event) {
+                    @*LoadDropDownList('SubsidyAccountIdDDL'
+                       , '@Url.Content("~/SubsidyAccount/GetSubsidyByGLAccountId")?GLAccountId=' + $('#GLAccountDDL').val()
+                    , "Please Select.."
+                    , null);*@
+                    //var optionalLabel = 'Please Select..';
+                    // $("#SubsidyAccountIdDDL").empty();
+                   // alert("sdfsd");
+                    var url = '@Url.Content("~/GLSubsidyTypeMap/IsCheckGLSubsidyExist")';
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: "GLAccountId=" + $('#GLAccountDDL').val(),
+                        dataType: "json",
+                        success: function (data) {
+
+                            //$("#SubsidyAccountIdDDL").append($('<option/>', {
+                            //    value: "",
+                            //    text: optionalLabel
+                            //}));
+                            // alert(data);
+                           //Global Variable
+                            IsSubsidyExsit = data;
+                            //Local Variable
+                            IsSubsidyExist=data;
+
+                            var voucherTypeWiseGLMapId = $("#VoucherTypeWiseGLMap.GLAccountId").val();
+                            var GLAccountId=  $('#GLAccountDDL').val();
+                            if (voucherTypeWiseGLMapId != GLAccountId) {
+                                var IsOppsiteEntry=true;
+                                TransactionVM.VoucherTypeWiseUILoad(@Model.Transaction.VoucherTypeId,IsOppsiteEntry,IsSubsidyExist);
+                            }
+                            else{
+                                var IsOppsiteEntry=false;
+                                TransactionVM.VoucherTypeWiseUILoad(@Model.Transaction.VoucherTypeId,IsOppsiteEntry,IsSubsidyExist);
+                            }
+                            //else {
+                            //    $("#divSubsidyAccountId").show();
+                            //    $.each(data, function (index, itemData) {
+                            //        $('#SubsidyAccountIdDDL').append($('<option/>', {
+                            //            value: data[index]["Key"],
+                            //            text: data[index]["Value"]
+                            //        }));
+                            //    });
+                            //    //$("#SubsidyAccountIdDDL").attr('data-live-search', true);
+                            //    //$("#SubsidyAccountIdDDL").addClass('selectpicker show-tick');
+
+                            //}
+
+                        },
+                        error: function (error) {
+                            alert(error);
+                            //  alert("asdf");
+                        }
+                    });
+
+
+                });
+
+                var $tab_items = $(".nav-tabs > li", $tabs).droppable({
+                    accept: ".connectedSortable tr",
+                    hoverClass: "ui-state-hover",
+
+                    drop: function (event, ui) {
+                        return false;
+                    }
+                });
+                $(document).on('keypress', 'input#searchItem', function (e) {
+
+                    var code = (e.keyCode ? e.keyCode : e.which);
+                    if (code == 13) { //Enter keycode
+
+                        $("#btnAdd").trigger("click");
+                    }
+                });
+                $("#btnAdd").click(function () {
+                    var searchItem = $("#searchItem").val();
+                    var drAmount = $("#TransactionDet_DrAmount").val();
+                    var crAmount = $("#TransactionDet_CrAmount").val();
+                    var particulars = $("#TransactionDet_Particulars").val();
+                    var subsidyAccountId = $("#TransactionDet.SubsidyAccountId").val();
+
+                    var GLAccountId = $("#GLAccountDDL option:selected").val();
+                    var SubsidyId = $("#SubsidyId").val();
+                    var SubsidyName = $("#SubsidyName").val();
+                    var GLAccountName = $("#GLAccountDDL option:selected").text();
+                    if (searchItem == '') {
+
+                        if(IsSubsidyExsit=="True"){
+                            alert("Please give the Subsidy.");
+                            return false;
+                        }
+
+                    }
+                    // var SubsidyAccountId = $("#SubsidyAccountIdDDL option:selected").val();
+                    //  var SubsidyAccountName = $("#SubsidyAccountIdDDL option:selected").text();
+                    //if ($('#SubsidyAccountIdDDL option').length < 2) {
+                    //    SubsidyAccountName = 'N/A';
+                    //}
+
+                    //if (CompanyId == "" || CompanyId == 0) {
+                    //    alert("Please Select the Company.");
+
+                    //    return false;
+                    //}
+
+                    var value = TransactionVM.listTransactionDet.replace("[GlAccountId]", GLAccountId).replace("[GlAccountName]", GLAccountName).replace("[DrAmount]", drAmount).replace("[CrAmount]", crAmount).replace("[Particulars]", particulars).replace("[SubsidyName]", SubsidyName);
+
+                    var isDuplicate = false;
+
+
+                    $("#tblApplicant tr").each(function (index) {
+                        $("td", this).each(function (index) {
+
+                            if ($(this).find(":input").val() == GLAccountId) {
+                                // var tr = $(this).closest('tr');//find same tr
+                                //tr.remove();
+                                //$("#tbApplicant").prepend(value);
+                                //$(this).parent("tr").addClass("danger");
+                                isDuplicate = true;
+                                $("#searchItem").val('');
+                                $("#TransactionDet_DrAmount").val('');
+                                $("#TransactionDet_Particulars").val('');
+                                $("#TransactionDet_CrAmount").val('');
+                                TransactionVM.Typehead();
+                                //  return false;
+                            }
+                        });
+                        if (isDuplicate == true) {
+                            $(this).addClass("danger");
+                            return false;
+                        }
+                    });
+
+                    if (isDuplicate == false) {
+                        var len = $('#tbApplicant tr').length;
+                        if (len == 0) {
+                            $("#tbApplicant").prepend(value);
+                            $("#tbApplicant tr:last").addClass("success");
+                        }
+                        else {
+                            $("#tbApplicant tr:last").after(value);
+                            $("#tbApplicant tr:last").addClass("success");
+                        }
+
+                        $("#searchItem").val('');
+                        $("#TransactionDet_DrAmount").val('');
+                        $("#TransactionDet_Particulars").val('');
+                        $("#TransactionDet_CrAmount").val('');
+                        $("#SubsidyId").val('');
+                        $("#SubsidyName").val('');
+                        $("#TransactionDet.SubsidyAccountId").val('');
+
+                        TransactionVM.Typehead();
+                    }
+                    $("#searchItem").focus();
+                });
+
+                TransactionVM.Typehead();
+            },
+            VoucherTypeWiseUILoad: function (VoucherTypeId,IsOppsiteEntry,IsSubsidyExist) {
+             //   $("#GLAccountDDL").trigger("click");
+                if(VoucherTypeId==1){//Cash Payment
+
+                    if(IsOppsiteEntry==true){
+                        $("#CrAmountId").val('');
+                        $("#CrAmountId").hide();
+                        $("#DrAmountId").show();
+                    }
+                    else{
+                        $("#DrAmountId").val('');
+                        $("#DrAmountId").hide();
+                        $("#CrAmountId").show();
+                    }
+
+                }
+                else if(VoucherTypeId==2){//Cash Received
+                    if(IsOppsiteEntry==true){
+                        $("#DrAmountId").val('');
+                        $("#DrAmountId").hide();
+                        $("#CrAmountId").show();
+                    }
+                    else{
+                        $("#CrAmountId").val('');
+                        $("#CrAmountId").hide();
+                        $("#DrAmountId").show();
+                    }
+
+                }
+                if(VoucherTypeId==3){//Bank Payment
+                    if(IsSubsidyExist=="True"){
+                        $("#divBankSubsidyAccountId").show();
+                        $("#divSubsidyAccountId").hide();
+                    }
+                    if(IsOppsiteEntry==true){
+                        $("#CrAmountId").val('');
+                        $("#CrAmountId").hide();
+                        $("#DrAmountId").show();
+                    }
+                    else{
+                        $("#DrAmountId").hide();
+                        $("#DrAmountId").val('');
+                        $("#CrAmountId").show();
+                    }
+                    return false;
+
+                }
+                if(VoucherTypeId==4){//Bank Received
+                    if(IsSubsidyExist=="True"){
+                        $("#divBankSubsidyAccountId").show();
+                        $("#divSubsidyAccountId").hide();
+                    }
+                    
+                    if(IsOppsiteEntry==true){
+                        $("#DrAmountId").val('');
+                        $("#DrAmountId").hide();
+                        $("#CrAmountId").show();
+                    }
+                    else{
+                        $("#CrAmountId").val('');
+                        $("#CrAmountId").hide();
+                        $("#DrAmountId").show();
+                    }
+                    return false;
+                }
+                if(VoucherTypeId==5){//Journal
+
+                    $("#DrAmountId").val('');
+                    $("#CrAmountId").val('');
+                    $("#DrAmountId").show();
+                    $("#CrAmountId").show();
+                }
+                if(VoucherTypeId==6){//Contra
+                    $("#DrAmountId").val('');
+                    $("#CrAmountId").val('');
+                    $("#DrAmountId").show();
+                    $("#CrAmountId").show();
+                }
+                $("#SubsidyId").val('');
+                $("#SubsidyName").val('');
+                $("#TransactionDet.SubsidyAccountId").val('');        
+               // alert(IsSubsidyExist);
+                if(IsSubsidyExist=='True'){
+                    $("#divSubsidyAccountId").show();
+                }
+                else{
+                    $("#divSubsidyAccountId").hide();
+                }
+            },
+            Typehead: function () {
+                //var CompanyId = $("#CompanyDDL option:selected").val();
+                //if (CompanyId==0) {
+                //    alert("Please Select Company.")
+                //    $("#searchItem").val('');
+                //    $("#searchItem").focus()
+                //    return false;
+                //}
+                $('#searchItem').typeahead('destroy');
+                $('#searchItem').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength:3
+                },
+                {
+                    items: 8,
+                    name: 'SubsidyId',
+                    displayKey: 'SubsidyName',
+                    property: "SubsidyName",
+                    source: function (UserName, process) {
+                        var url = '@Url.Content("~/SubsidyAccount/GetSubsidyByCriteria")';
+                        return $.getJSON(url, { GLAccountId:$('#GLAccountDDL').val(),searchItem:$("#searchItem").val()  }, function (data) {
+
+                            //var CompanyId = $("#CompanyDDL option:selected").val();
+                            //if (CompanyId == 0) {
+                            //    alert("Please Select Company.")
+                            //    $("#searchItem").val('');
+                            //    $("#searchItem").focus()
+                            //    return false;
+                            //}
+                            //$("#searchItem").val('');
+                            //$("#searchItem").focus()
+                            return process(data);
+
+                        });
+                    },
+                    updater: function (item) {
+                        return item.Name;
+                    }
+                }).on('typeahead:selected', function (obj, datum) {
+
+                    $("#SubsidyId").val(datum.SubsidyId);
+                    $("#SubsidyName").val(datum.SubsidyName);
+                    $("#TransactionDet.SubsidyAccountId").val(datum.SubsidyAccountId);
+                    //$("#searchItem").focus();
+                    $("#TransactionDet_DrAmount").focus();
+                    $("#TransactionDet_CrAmount").focus();
+                });
+            },
+
+            TransactionVMSubmit: function () {
+
+                var url = '@Url.Content("~/CompanyWiseApplicant/Create")';
+                var param = JSON.stringify({ 'lstCompanyWiseApplicant': TransactionVM.listTransactionDet });
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: param,
+                    success: function (Data) {
+                        if (Data) {
+                            window.location = '@Url.Content("~/CompanyWiseApplicant/index")';
+                        }
+                        else {
+                            alert("Exception occured.");
+                        }
+
+                    },
+                    contentType: 'application/json; charset=utf-8',
+                });
+            }
+
+        }
+
+        TransactionVM.Initialize();
+
+        $(document).on('click', 'button.remove', function () {
+            $(this).parent("td").parent("tr").remove();
+        });
+        $(document).on('click', 'button.EditFollowupAction', function () {
+            alert("dfgdfg");
+            $(this).parent("td").parent("tr").each(function (index) {
+                $("td", this).each(function (index) {
+                    //if (index == 0) {
+                    //    var IssueDiscussedCkEditorold = $("#IssueDiscussedCkEditorold").val();
+                    //    CKEDITOR.instances.IssueDiscussedCkEditorold.setData($(this).html());
+                    //}
+                    if (index == 1) {
+                        $("#IssuePlacedByold").val($(this).html())
+                    }
+                    else if (index == 2) {
+                        $("#ActionItemold").val($(this).html());
+
+                    }
+                    else if (index == 3) {
+                        $("#ActionOwnerold").val($(this).html());
+                    }
+                    else if (index == 4) {
+                        $("#ByWhenold").val($(this).html());
+                    }
+                });
+
+            });
+            $(this).parent("td").parent("tr").remove();
+
+        });
+        $("#btnSubmit").click(function () {
+
+            TransactionVM.TransactionDet = new Array;
+            var CompanyId = $("#CompanyDDL option:selected").val();
+            $("#tbApplicant tr").each(function (index) {
+                var ApplicantgArr = {
+                    ID: '',
+                    CompanyId: '',
+                    ApplicantId: ''
+                }
+                $("td", this).each(function (index) {
+                    //if (index == 0) {
+
+                    //    ApplicantgArr.ID = $(this).find(":input").val();
+                    //}
+
+                    if (index == 0) {
+                        ApplicantgArr.ApplicantId = $(this).html();;
+                    }
+
+                    //if (index == 1) {
+                    //    ApplicantgArr.CompanyId = $(this).html();
+                    //}
+                });
+                ApplicantgArr.CompanyId = CompanyId;
+                TransactionVM.Applicant.push(ApplicantgArr);
+            });
+
+
+
+
+            if (TransactionVM.Applicant.length > 0) {
+                TransactionVM.CompanyApplicantMapSubmit();
+            }
+            else {
+                alert("Applicant Not found.");
+            }
+
+
+        });
+
+    });
+
+
+</script>
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>FMS Operation</li>
+    <li class="active"> @ViewBag.Title</li>
+}
+
+<style type="text/css">
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+<p> @Html.ActionLink("Go Back to List", "Index", null, null, new { @class = "btn btn-success btn-xs" })</p>
+<hr />
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(x => x.Transaction.VoucherTypeId)
+    @Html.HiddenFor(x => x.TransactionDet.SubsidyAccountId)
+    @Html.HiddenFor(x => x.VoucherTypeWiseGLMap.GLAccountId)
+    <div class="panel-body">
+        <div class="form-group col-sm-12">
+            @*<div class="col-sm-4">
+                    @Html.Label("PR Type")
+                    @Html.DropDownListFor(model => model.Transaction.PRTypeId, new SelectList(Model.Transaction.kvpPRType, "Key", "Value", Model.Transaction.PRTypeId), "Select PR Type", new { id = "CompanyDDL", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Transaction.PRTypeId)
+
+                </div>*@
+            <div class="col-sm-4">
+                @Html.Label("Voucher Type")
+                @Html.DropDownListFor(model => model.Transaction.VoucherTypeId, new SelectList(Model.Transaction.kvpVoucherType, "Key", "Value", Model.Transaction.VoucherTypeId), "Select VoucherType", new { id = "CompanyDDL", @class = "form-control", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.Transaction.VoucherTypeId)
+
+            </div>
+            <div class="form-group">
+
+                @Html.LabelFor(model => model.Transaction.Narration, new { @class = "col-sm-4 control-label" })
+                <div class="col-sm-4">
+                    @Html.TextAreaFor(model => model.Transaction.Narration, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Transaction.Narration)
+                </div>
+            </div>
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.Transaction.TransactionDate, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">
+                        <div class='input-group date' id='TransactionDate'>
+                            @Html.TextBoxFor(model => model.Transaction.TransactionDate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                            @Html.ValidationMessageFor(model => model.Transaction.TransactionDate)
+                            <span class="input-group-addon">
+                                <span class="fa fa-calendar">
+                                </span>
+                            </span>
+
+                        </div>
+                    </div>
+                </div>*@
+        </div>
+
+        <div id="" class="row">
+           
+            <div class="col-md-12" id="divBankSubsidyAccountId">
+                <div class="form-group">
+                    <div class=" col-md-3">
+                        @Html.Label("Bank Account")
+                        <input id="searchItem" class="form-control" type="text" placeholder="Search Subsidy">
+                    </div>
+                    <div class="col-md-3">
+                        @Html.Label("Bank Account Id")
+                        <input id="SubsidyId" class="form-control" type="text" readonly placeholder="Subsidy Id">
+                    </div>
+                    <div class="col-md-3">
+                        @Html.Label("Bank Name")
+                        <input id="SubsidyName" class="form-control" type="text" readonly placeholder="Subsidy Name">
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.TransactionDet.GLAccountId, new { @class = "col-sm-2 control-label required" })
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(model => model.TransactionDet.GLAccountId, new SelectList(Model.TransactionDet.kvpGLAccount, "Key", "Value", Model.TransactionDet.GLAccountId), "Select GL Account", new { id = "GLAccountDDL", @class = "selectpicker show-tick form-control" })
+                        @Html.ValidationMessageFor(model => model.TransactionDet.GLAccountId)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" id="divSubsidyAccountId">
+                <div class="form-group">
+                    <div class=" col-md-3">
+                        @Html.Label("Subsidy Search")
+                        <input id="searchItem" class="form-control" type="text" placeholder="Search Subsidy">
+                    </div>
+                    <div class="col-md-3">
+                        @Html.Label("Subsidy Id")
+                        <input id="SubsidyId" class="form-control" type="text" readonly placeholder="Subsidy Id">
+                    </div>
+                    <div class="col-md-3">
+                        @Html.Label("Subsidy Name")
+                        <input id="SubsidyName" class="form-control" type="text" readonly placeholder="Subsidy Name">
+                    </div>
+                  
+                </div>
+            </div>
+            <div class="col-md-12">
+
+                <div class="form-group" id="DrAmountId">
+
+                    @Html.LabelFor(model => model.TransactionDet.DrAmount, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.TransactionDet.DrAmount, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TransactionDet.DrAmount)
+                    </div>
+                </div>
+                <div class="form-group" id="CrAmountId">
+
+                    @Html.LabelFor(model => model.TransactionDet.CrAmount, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.TransactionDet.CrAmount, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TransactionDet.CrAmount)
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.TransactionDet.Particulars, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">
+                        @Html.TextAreaFor(model => model.TransactionDet.Particulars, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TransactionDet.Particulars)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 margin-0">
+                <div class="col-md-3">
+                    <label>&nbsp;</label>
+                    <input id="btnAdd" type="button" value="Add" class="btn btn-primary " />
+                </div>
+            </div>
+
+        </div>
+
+        <div id="attendees" class="form-group">
+            <table id="tblApplicant" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>GL Account Name</th>
+                        <th>Subsidy Account Name</th>
+                        <th>Dr Amount</th>
+                        <th>Cr Amount</th>
+                        <th>Particulars</th>
+
+                        <th></th>
+                    </tr>
+                    <hr />
+                </thead>
+
+                <tbody id="tbApplicant" class="connectedSortable"></tbody>
+
+                <tfoot>
+                    <tr id="">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="form-group col-md-12">
+            <div>
+                <input id="btnSubmit" type="button" value="Submit" class="btn btn-default pull-left" onclick=" return AddConfirm()" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrapth")
+}

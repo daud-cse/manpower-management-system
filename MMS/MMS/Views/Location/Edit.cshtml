@@ -1,0 +1,196 @@
+﻿@model MMS.Entities.Models.Location
+
+@{
+    ViewBag.Title = "Location Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#page-leftbar li").removeClass("active");
+
+        $("#liAdmin").addClass("active");
+        $("#liLocation").addClass("active");
+    });
+
+
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">Location Setup</li>
+}
+
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+<p> @Html.ActionLink("Go Back to Location List", "Index", null, null, new { @class = "btn btn-success btn-xs" })</p>
+<hr />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(x => x.ID)
+    <div class="panel panel-info">
+
+        <div class="panel-heading">
+            @ViewBag.Title.ToString()
+
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-sm-12">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">@ViewBag.Title.ToString()</legend>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.Name, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control",@readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.SetPercentage, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(model => model.SetPercentage, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.SetPercentage)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsStartingCompanyWise) @Html.Label("Is Starting")
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                       
+                      
+
+                        @*<div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsActive) @Html.LabelFor(model => model.IsActive)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsSendGeneralMesasge) @Html.LabelFor(model => model.IsSendGeneralMesasge)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.GeneralMessageBody, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                @Html.TextAreaFor(model => model.GeneralMessageBody, new { @class = "form-control", cols = 60, rows = 10 })
+                                @Html.ValidationMessageFor(model => model.GeneralMessageBody)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsSendApplicantMesasge) @Html.LabelFor(model => model.IsSendApplicantMesasge)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.ApplicantMessageBody, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                @Html.TextAreaFor(model => model.ApplicantMessageBody, new { @class = "form-control", cols = 60, rows = 10 })
+                                @Html.ValidationMessageFor(model => model.ApplicantMessageBody)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsSendAgentMesasge) @Html.LabelFor(model => model.IsSendAgentMesasge)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.AgentMessageBody, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                @Html.TextAreaFor(model => model.AgentMessageBody, new { @class = "form-control", cols = 60, rows = 10 })
+                                @Html.ValidationMessageFor(model => model.AgentMessageBody)
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-3">
+                    <div class="btn-toolbar">
+                        <input type="submit" value="Update" class="btn-primary btn" onclick=" return EditConfirm()" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

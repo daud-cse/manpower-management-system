@@ -1,0 +1,385 @@
+﻿@model MMS.Entities.Models.Agent
+
+@{
+    ViewBag.Title = "Agent Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var agentInfo = {
+            listTemplate: "<tr><td>[materialid]</td><td>[material]</td><td>[RequiredQuantity]</td><td>[AvgPrice]</td><td>[UnitofmeasurementName]</td><td><button type='button' class='remove btn btn-danger btn-sm'><span class='glyphicon glyphicon-remove-sign'></span>Delete</button></td></tr>",
+            agent: {
+
+            },
+            agent: [],
+            Initialize: function () {
+
+                $("#page-leftbar li").removeClass("active");
+                $("#liAdmin").addClass("active");
+                $("#liAgent").addClass("active");
+
+
+
+                $("#AgentTypeID").attr('data-live-search', true);
+                $("#NationalityID").attr('data-live-search', true);
+                // $("#ResidentialUpazilaID").attr('data-live-search', true);
+                //   $("#PermanentUpazilaID").attr('data-live-search', true);
+                //  $("#DistrictID").attr('data-live-search', true);
+                $("#CountryID").attr('data-live-search', true);
+                var optionalLabel = 'Please Select..';
+                $('#ddlDivisionId').change(function (event) {
+
+                    if ($('#ddlDivisionId').val() == '' || $('#ddlDivisionId').val() == null) {
+                        $("#ddlDistrict").empty();
+                        $("#PermanentUpazilaID").empty();
+                        $("#ddlDistrict").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+                        $("#PermanentUpazilaID").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+                        return false;
+                    }
+                    else {
+                        LoadDropDownList('ddlDistrict'
+                     , '@Url.Content("~/District/GetDistrictByDivisionId")?divisionId=' + $('#ddlDivisionId').val()
+                  , "Please Select.."
+                  , null);
+                        $("#PermanentUpazilaID").empty();
+                        $("#PermanentUpazilaID").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+
+                    }
+
+
+
+                });
+                //$("#uploadAgentImage").bind("click", function () {
+
+                //});
+                $('#ddlDistrict').change(function (event) {
+                    LoadDropDownList('PermanentUpazilaID'
+                       , '@Url.Content("~/Upazila/GetUpazilaByDistrictId")?districtId=' + $('#ddlDistrict').val()
+                    , "Please Select.."
+                    , null);
+                });
+                $("#btnAdd").click(function () {
+
+                });
+
+                $('#applicant_ID').change(function () {
+                    var applicantID = $('#applicant_ID').val();
+
+                    var url = "/LocationChangeVM/GetApplicantLocation?Id=" + $("#applicant_ID").val() + "&IsApplicant=true";
+                    window.location = url;
+                });
+
+
+            },
+            GetAgent: function (id) {
+                var url = '@Url.Content("~/Agent/GetAgent")';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { id: id },
+                    dataType: "json",
+                    success: function (data) {
+
+                        for (var i = 0; i < data.StockOutList.length; i++) {
+                            var value = materialforrequsition.listTemplate.replace("[materialid]", data.StockOutList[i].Material.Id).replace("[material]", data.StockOutList[i].Material.Name).replace("[RequiredQuantity]", data.StockOutList[i].Quantity).replace("[AvgPrice]", data.StockOutList[i].replace("[UnitofmeasurementName]", data.StockOutList[i].Material.Unitofmeasurement.Name));
+                            $("#tbmaterials").prepend(value);
+                        }
+                    },
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            },
+
+        }
+        agentInfo.Initialize();
+
+    });
+    function AgentImageCheck() {
+        // alert("dsfd");
+        if (typeof ($("#uploadAgentImage")[0].files) != "undefined") {
+            var size = parseFloat($("#uploadAgentImage")[0].files[0].size / 1024).toFixed(2);
+            if (size > 300) {
+                alert("Image is not greater than 300KB");
+                return false;
+            }
+            else {
+                true;
+            }
+            // alert(size + " KB.");
+        } else {
+            alert("This browser does not support HTML5.");
+        }
+    }
+
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">Agent Setup</li>
+}
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+<p> @Html.ActionLink("Go Back to Agent List", "Index", null, null, new { @class = "btn btn-success btn-large" })</p>
+<hr />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="panel panel-info">
+
+        <div class="panel-heading">
+            @ViewBag.Title.ToString()
+            
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">Basic Info</legend>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.Name, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.AgentTypeID, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.AgentTypeID, new SelectList(Model.kvpAgentType, "Key", "Value", Model.AgentTypeID), "Select Agent Type", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.AgentTypeID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Photo (300 kb):", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control" name="uploadAgentImage" id="uploadAgentImage" onchange="checkPhoto(this)" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.NID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.NID, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.NID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.Mobile, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.Mobile, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Mobile)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.MotherName, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.MotherName, new { @class = "form-control required" })
+                                @Html.ValidationMessageFor(model => model.MotherName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.FatherName, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.FatherName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.FatherName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.LicenseNo, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.LicenseNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.LicenseNo)
+                            </div>
+                        </div>
+                     
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.Email, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.PassportNo, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.PassportNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PassportNo)
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-sm-6">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">Address Info</legend>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.PermanentAddress, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.PermanentAddress, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PermanentAddress)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.ResidentialAddress, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.ResidentialAddress, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ResidentialAddress)
+                            </div>
+                        </div>
+
+                     
+                        @*<div class="form-group">
+
+                        @Html.LabelFor(model => model.address.Upazila, new { @class = "col-sm-3 control-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(model => model.address.Upazila, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.address.Upazila)
+                        </div>
+                    </div>*@
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-8">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsActive) @Html.LabelFor(model => model.IsActive)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                     
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.NationalityID, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.NationalityID, new SelectList(Model.kvpNationality, "Key", "Value", Model.NationalityID), "Select Nationality", new { @class = "selectpicker show-tick form-control" })
+                                @Html.ValidationMessageFor(model => model.NationalityID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.CountryID, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.CountryID, new SelectList(Model.kvpCountry, "Key", "Value", Model.CountryID), "Select Country", new { @class = "selectpicker show-tick form-control" })
+                                @Html.ValidationMessageFor(model => model.CountryID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.DivisionID, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.DivisionID, new SelectList(Model.kvpDivision, "Key", "Value", Model.DivisionID), "Select Division", new { @class = "form-control", id = "ddlDivisionId" })
+                                @Html.ValidationMessageFor(model => model.DivisionID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.DistrictID, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.DistrictID, new SelectList(Model.kvpDistrict, "Key", "Value", Model.DistrictID), "Select District", new { @class = "", id = "ddlDistrict" })
+                                @Html.ValidationMessageFor(model => model.DistrictID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.PermanentUpazilaID, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.PermanentUpazilaID, new SelectList(Model.kvpUpazila, "Key", "Value", Model.PermanentUpazilaID), "Select Upazil", new { @class = "" })
+                                @Html.ValidationMessageFor(model => model.PermanentUpazilaID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.Description, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                @*<div class="form-group">
+
+                @Html.LabelFor(model => model.ResidentialUpazilaID, new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-6">
+                    @Html.DropDownListFor(model => model.ResidentialUpazilaID, new SelectList(Model.kvpUpazila, "Key", "Value", Model.ResidentialUpazilaID), "Select Upazil", new { @class = "" })
+                    @Html.ValidationMessageFor(model => model.ResidentialUpazilaID)
+                </div>
+            </div>*@
+            </div>
+
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <div class="btn-toolbar">
+                            <input type="submit" value="Create" class="btn-primary btn" onclick=" return AgentImageCheck()" />
+                        </div>
+                    </div>
+                </div>
+
+           
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

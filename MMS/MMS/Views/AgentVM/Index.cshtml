@@ -1,0 +1,89 @@
+﻿@model MMS.Entities.ViewModels.AgentVM
+
+@{
+    ViewBag.Title = "Agent List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb
+          {
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Agent</li>
+    <li class="active">Agent List</li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+
+
+@Html.ActionLink("Create New", "Create", new { }) @*<text>|</text>*@
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.agentList.FirstOrDefault().Address.Name)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.Years)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DistrictName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DistrictAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpaName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpaThanaAmount)
+        </th>
+        <th>
+            @Html.DisplayName("Active District")
+        </th>
+        <th>
+            @Html.DisplayName("Active Thana")
+        </th>*@
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.agentList)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address.Name)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Years)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DistrictName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DistrictAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpaName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpaThanaAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActiveDistrictId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActiveThanaId)
+            </td>*@
+            <td>
+             
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <text>|</text>
+               
+                        @Html.ActionLink("Delete", "Delete", "ProjectsDBR", new { id = item.ID }, null)
+                    
+
+
+                </td>
+            </tr>
+    }
+
+</table>

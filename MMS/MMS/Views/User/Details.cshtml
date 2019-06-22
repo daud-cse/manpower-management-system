@@ -1,0 +1,74 @@
+﻿@model MMS.Entities.Models.User
+
+@{
+    ViewBag.Title = "User Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+
+</script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">User Details</li>
+}
+
+<h2>Details</h2>
+
+<div class="panel-body">
+
+    <div class="row">
+        <div class="col-md-6">
+            @*<img src="assets/demo/avatar/johansson.png" alt="" class="pull-left" style="margin: 0 20px 20px 0">*@
+            <div class="table-responsive">
+                <h3><strong>@Model.UserName</strong></h3><table class="table table-condensed">
+
+
+                    <tbody>
+                       
+                        <tr>
+                            <td>Email</td>
+                            <td><a href="">@Model.EmailId</a></td>
+                        </tr>
+                        <tr>
+                            <td>Phone</td>
+                            <td>@Model.PhoneNo</td>
+                        </tr>
+                        <tr>
+                            <td>User Accounts Id</td>
+                            <td>@Model.UserAccountsId</td>
+
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td> @Model.IsActive</td>
+                        </tr>
+                        <tr>
+                            <td>Social</td>
+                            <td>
+                                <a href="#" class="btn btn-xs"><i class="fa fa-skype"></i></a>
+                                <a href="#" class="btn btn-xs"><i class="fa fa-facebook"></i></a>
+                                <a href="#" class="btn btn-xs"><i class="fa fa-twitter"></i></a>
+                                <a href="#" class="btn btn-xs"><i class="fa fa-dribbble"></i></a>
+                                <a href="#" class="btn btn-xs"><i class="fa fa-tumblr"></i></a>
+                                <a href="#" class="btn btn-xs"><i class="fa fa-linkedin"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</div>

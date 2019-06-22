@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<style type="text/css">
+    .row {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+</style>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - MPMS</title>
+    <meta name="description" content="manpower management system" />
+    
+    @Styles.Render("~/bundles/css")
+    <style type="text/css">
+        footer {
+            margin-left: 0px;
+        }
+    </style>
+    @*@RenderSection("headScripts", required: false)*@
+</head>
+<body>
+<div class="row">
+    <div class="col-md-3">
+        @*<a href="~/Home/Index">
+            <img class="logo" src="~/assets/img/qklogo.jpg" alt="" style="display: block; margin: 0 auto;" />
+        </a>*@
+    </div>
+    <div class="col-md-6">
+        <h2 style="text-align: center; font-weight: 700;">MPMS</h2>
+    </div>
+</div>
+
+<div id="container">
+    @Html.Partial("_alerts")
+    <div class="row" style="min-height: 500px;">
+        <div class="col-md-8">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    About Application
+                </div>
+                <div class="panel-body">
+                   
+                    <p>Broadly, Manpower Management System in involved in four broad types of activities:</p>
+                    Manpower Planning which is also called as Human Resource Planning consists of putting right number of people, right kind of people at the right place, right time, doing the right things for which they are suited for the achievement of goals of the organization. Human Resource Planning has got an important place in the arena of industrialization. Human Resource Planning has to be a systems approach and is carried out in a set procedure. The procedure is as follows:<br/>
+                    • Analysing the current manpower inventory<br/>
+                    • Making future manpower forecasts<br/>
+                    • Design training programmes.<br />
+                    • Polli Shomaj Information System Planning is a two-phased process because manpower planning not only analyses the current human resources but also makes manpower forecasts and thereby draw employment programmes. Manpower Planning is advantageous to firm in following manner:
+                    <br/><br/>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            @Scripts.Render("~/bundles/jquery")
+            @RenderBody()
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            @Html.Partial("_footer")
+        </div>
+    </div>
+</div>
+    @RenderSection("scripts", required: false)
+  
+</body>
+</html>

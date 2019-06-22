@@ -1,0 +1,147 @@
+﻿@using MvcPaging
+@model MvcPaging.IPagedList<MMS.Entities.Models.FMS_DayOpenClose>
+@{
+    ViewBag.Title = "Day Open Close List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#page-leftbar li").removeClass("active");
+        $("#liAdmin").addClass("active");
+    });
+</script>
+
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>FMS Operation</li>
+    <li class="active">Day Open Close List</li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+<style type="text/css">
+    .form-inline .form-control {
+        width: 100%;
+    }
+
+    .form-inline input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .form-inline .form-group {
+        width: 80%;
+    }
+
+    /*.margin {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }*/
+</style>
+@using (Html.BeginForm("Index", "Transaction", FormMethod.Get))
+{
+    <div class="row margin">
+        <div class="col-md-5">
+            @*@if ((GolbalSession.gblSession.UserRights.Exists(x => x.Equals(18))))
+                {*@
+            @*<p>
+                    @Html.ActionLink("Create New", "Create")
+                </p>*@
+            @*}*@
+        </div>
+        <div class="form-inline col-md-6" style="margin-bottom: 20px">
+
+            <div class="form-group">
+                <input type="text" class="form-control " id="searchItem" name="searchItem" placeholder="Search item" value="@ViewData["searchItem"]">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+
+
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().OpenDate)
+
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().OpenedOn)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().ClosedOn)
+                </th>
+                <th>
+                    @Html.DisplayName("Closing Cash Balance")
+                </th>
+                <th>
+                    @Html.DisplayName("Opening Cash Balance")
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().IsDayClosed)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OpenDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OpenedOn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClosedOn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClosingCashBalance)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OpeningCashBalance)
+                    </td>
+                   
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsDayClosed)
+                    </td>                  
+                </tr>
+            }
+        <tbody>
+    </table>
+
+    <hr />
+    <div class="pager">
+        @Html.Raw(Html.Pager(
+                 new Options
+                 {
+                     PageSize = Model.PageSize,
+                     TotalItemCount = Model.TotalItemCount,
+                     CurrentPage = Model.PageNumber,
+                     ItemTexts = new ItemTexts() { Next = "Next", Previous = "Previous" },
+                     ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+                     TooltipTitles = new TooltipTitles() { Next = "Next page {0}", Previous = "Previous page {0}", Page = "Go to page {0}" },
+                     Size = Size.normal,
+                     Alignment = Alignment.centered,
+                     IsShowControls = true,
+                     IsShowFirstLast = true,
+                     IsShowPages = true
+                 }, new { searchItem = ViewData["searchItem"] }))
+        <div class="well">
+            Showing <span class="badge badge-success">@Model.ItemStart</span> to <span class="badge badge-success">@Model.ItemEnd</span>
+            of <span class="badge badge-info">@Model.TotalItemCount</span> entries
+        </div>
+    </div>
+}
+
+
+
+

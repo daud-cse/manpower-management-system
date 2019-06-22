@@ -1,0 +1,228 @@
+﻿<nav id="page-leftbar" role="navigation">
+    <!-- BEGIN SIDEBAR MENU -->
+    <ul class="acc-menu" id="sidebar" style="top: 40px;">
+        <li id="search">
+            <a href="javascript:;"><i class="fa fa-search opacity-control"></i></a>
+            <form>
+                <input type="text" readonly class="search-query" placeholder="">
+                <button type="submit">
+                    @*<i class="fa fa-search"></i>*@
+                </button>
+            </form>
+        </li>
+        <li class="divider"></li>
+        <li class="active" id="liDashBoard"><a href="~/Dashboard/"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+
+
+
+
+        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS001") || x.Equals("FMS002") || x.Equals("FMS003") || x.Equals("FMS004") || x.Equals("FMS005") || x.Equals("FMS006") || x.Equals("FMS007") || x.Equals("FMS008") || x.Equals("FMS009") || x.Equals("FMS010") || x.Equals("FMS011")))
+        {
+            <li id="liAdmin" class="hasChild">
+                <a href="javascript:;"><i class="fa fa-th"></i> <span>Administration</span> </a>
+                <ul class="acc-menu">
+
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS001")))
+                    {
+                        <li>@Html.ActionLink("User Setup", "Index", "User")</li>
+                    }
+                    <li id="liBankAccountType">@Html.ActionLink("Bank Account Type Setup", "Index", "BankAccountType")</li>
+
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS002")))
+                    {
+                        <li>@Html.ActionLink("Bank Setup", "Index", "BankAccountInfo")</li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS003")))
+                    {
+                        <li>@Html.ActionLink("Customer Setup", "Index", "Customer")</li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS004")))
+                    {
+                        <li>@Html.ActionLink("Employee Setup", "Index", "EmployeeInfo")</li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS005")))
+                    {
+                        <li>@Html.ActionLink("Vendor Setup", "Index", "VendorInfo")</li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS006")))
+                    {
+                        <li>@Html.ActionLink("GL Account Tree", "Index", "GLAccount")</li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS007")))
+                    {
+                        <li>@Html.ActionLink("Subsidy Type wise Map GL", "Index", "GLSubsidyTypeMap")</li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS008")))
+                    {
+                        <li>@Html.ActionLink("Voucher Type Wise Default GL", "Index", "VoucherTypeWiseGLMap")</li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS009")))
+                    {
+                        <li>@Html.ActionLink("Voucher Type Wise Opposite GL", "Index", "VoucherTypeWiseOppositeGLMap")</li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS010")))
+                    {
+                        <li>@Html.ActionLink("Day Open And Close", "DayOpenClose", "DayOpenCloseVM")</li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS011")))
+                    {
+                        <li>@Html.ActionLink("Day Open And Close List", "Index", "DayOpenClose")</li>
+                    }
+                </ul>
+            </li>
+        }
+        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS012")))
+        {
+            <li id="liTransactionList">
+                <a href="~/Transaction/Index"><i class="fa fa-home"></i> <span>Transaction List</span><span class="badge badge-indigo"></span></a>
+            </li>
+        }
+        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS013") || x.Equals("FMS014")))
+        {
+            <li id="liProject" class="hasChild">
+                <a href="javascript:;"><i class="fa fa-th"></i> <span>Sales and Purchase</span> </a>
+                <ul class="acc-menu">
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS013")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Purchase Against Payable", "Create", "TransactionVM", new { VoucherTypeId = 11 }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS014")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Sales Against Receivable", "Create", "TransactionVM", new { VoucherTypeId = 12 }, null)
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS015") || x.Equals("FMS016") || x.Equals("FMS017") || x.Equals("FMS018") || x.Equals("FMS019")))
+        {
+            <li id="liProject" class="hasChild">
+                <a href="javascript:;"><i class="fa fa-th"></i> <span>Payment</span> </a>
+                <ul class="acc-menu">
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS015")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Cash Payment", "Create", "TransactionVM", new { VoucherTypeId = 1 }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS016")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Cash Payment Multiple", "Create", "TransactionVM", new { VoucherTypeId = 1, IsMultipleCashPayRec = true }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS017")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Bank Payment", "Create", "TransactionVM", new { VoucherTypeId = 3 }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS018")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Cash Payment Against Payable", "Create", "TransactionVM", new { VoucherTypeId = 7 }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS019")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Bank Payment Against Payable", "Create", "TransactionVM", new { VoucherTypeId = 9 }, null)
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS020") || x.Equals("FMS021") || x.Equals("FMS022") || x.Equals("FMS023") || x.Equals("FMS024")))
+        {
+            <li id="liProject" class="hasChild">
+                <a href="javascript:;"><i class="fa fa-th"></i> <span>Received</span> </a>
+                <ul class="acc-menu">
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS020")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Cash Received", "Create", "TransactionVM", new { VoucherTypeId = 2 }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS021")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Cash Received Multiple", "Create", "TransactionVM", new { VoucherTypeId = 2, IsMultipleCashPayRec = true }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS022")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Bank Received", "Create", "TransactionVM", new { VoucherTypeId = 4 }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS023")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Cash Received Against Receivable", "Create", "TransactionVM", new { VoucherTypeId = 8 }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS024")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Bank Received Against Receivable", "Create", "TransactionVM", new { VoucherTypeId = 10 }, null)
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS025")))
+        {
+            <li id="liProject" class="hasChild">
+                <a href="javascript:;"><i class="fa fa-th"></i> <span>JV</span> </a>
+                <ul class="acc-menu">
+                    <li id="liProjectInner">
+                        @Html.ActionLink("Journal ", "Create", "TransactionVM", new { VoucherTypeId = 5 }, null)
+                    </li>
+
+                </ul>
+            </li>
+        }
+
+        @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS026") || x.Equals("FMS027") || x.Equals("FMS028") || x.Equals("FMS029")))
+        {
+            <li id="liReports" class="hasChild">
+                <a href="javascript:;"><i class="fa fa-th"></i> <span>Reports</span> </a>
+                <ul class="acc-menu">
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS026")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Ledger Statement", "LedgerStatement", "FMSReports")
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS027")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Balance Sheet", "BalanceSheet", "FMSReports")
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS028")))
+                    {
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Income Statement", "IncomeStatement", "FMSReports")
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS029")))
+                    {
+
+                        <li id="liProjectInner">
+                            @Html.ActionLink("Transaction List ", "TransactionList", "FMSReports", new { }, null)
+                        </li>
+                    }
+                    @if (GolbalSession.gblSession.UserRights.Exists(x => x.Equals("FMS030")))
+                    {
+                        <li><a href='#'>Trial Balance</a></li>
+                    }
+                </ul>
+            </li>
+
+        }
+    </ul>
+</nav>

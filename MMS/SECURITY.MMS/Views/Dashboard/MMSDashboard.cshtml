@@ -1,0 +1,441 @@
+﻿@model   MMS.Entities.ViewModels.DashboardVM
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    #report .btn-group {
+        width: 100%;
+    }
+</style>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    var projectActivity = [['Name', 'Total', { role: 'style' }]];
+    $(document).ready(function () {
+
+        $("#page-leftbar li").removeClass("active");
+        $("#liModuleDashBoard").addClass("active");
+        $("#liMMSDashBoard").addClass("active");
+
+        var color = ['#b87333', 'silver', 'gold', '#FF99FF', '#99FF66', '#CCCC00', '#FF9966', '#6666FF', '#669999', '#996600', '#666699', '#99CCFF', '#FFCCFF', '#CCCCFF', '#99CC00', '#FFFF99', '#A9A9A9', '#2F4F4F', '#F0FFF0', '#BDB76B', '#EEE8AA', '#708090', '#E6E6FA', '#D2B48C', '#5F9EA0', '#87CEEB', '#B0C4DE', '#FFEFD5', '#ADD8E6', '#FFA07A', '#4B0082', '#FF8C00'];
+       // var url = '@Url.Content("~/Dashboard/GetBarChartValue")';
+
+
+
+        //$.ajax({
+        //    type: "POST",
+        //    url: url,
+        //    dataType: "json",
+        //    success: function (data) {
+
+
+        //        for (var i = 0; i < data.vList.length; i++) {
+        //            projectActivity.push([data.vList[i].Name, parseInt(data.vList[i].TotalCount), color[i]]);
+        //        }
+
+
+
+        //        if (data.vList.length > 0) {
+        //            drawBasic(projectActivity);
+        //        }
+
+
+        //    },
+        //    error: function (error) {
+        //        alert(error);
+        //    }
+        //});
+    });
+    google.load('visualization', '1', { packages: ['corechart', 'bar'] });
+    //google.setOnLoadCallback(drawBasic(projectActivity));
+    function drawBasic(projectActivity) {
+       // var data = google.visualization.arrayToDataTable(projectActivity);
+        //var   data = google.visualization.arrayToDataTable([
+        //    ["sss", '2010 Population', ],
+        //    ['New York City, NY', 8175000],
+        //    ['Los Angeles, CA', 3792000],
+        //    ['Chicago, IL', 2695000],
+        //    ['Houston, TX', 2099000],
+        //    ['Philadelphia, PA', 1526000]
+        //  ]);
+        var options = {
+            title: 'Overall Projects Status',
+            chartArea: { width: '70%' },
+            hAxis: {
+                title: 'MMS Status',
+                minValue: 2
+            },
+            vAxis: {
+                title: 'Total Projects'
+            }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_div'));
+        chart.draw(data, options);
+    }
+</script>
+
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+
+<div class="container">
+    <div class="row">
+        <div style="height:20px">
+        </div>
+    </div>
+    <div class="row">
+
+
+        <div class="col-md-12">
+            <div class="row">
+
+
+
+
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                    <a href=@Url.Action("Index","Applicant") class="info-tiles tiles-orange">
+
+                        <div class="tiles-heading">Total Applicant</div>
+                        <div class="tiles-body-alt">
+                            <i class="fa fa-archive"></i>
+
+                            <div class="text-center">@Model.lstApplicantLocationTotal.Sum(x => x.AppLocationTotal)</div>
+                            <small>Applicant</small>
+                        </div>
+                        <div class="tiles-footer">Details</div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                    <a href="#" class="info-tiles tiles-toyo">
+
+                        <div class="tiles-heading">
+                            Todays Applicant
+                        </div>
+                        <div class="tiles-body-alt" style="height:100px">
+
+                            <i class="fa fa-group"></i>
+                            <div class="text-center">0 @*@Model.Projects.ToList().Count*@</div>
+                            <small>Persons</small>
+                        </div>
+                        <div class="tiles-footer">Details</div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                    @*<a href=@Url.Action("GetSubmitttedtoNGOBureauProjects", "Projects") class="info-tiles tiles-alizarin">*@
+                    <a href="#" class="info-tiles tiles-alizarin">
+                        <div class="tiles-heading">Total Flight Remaing</div>
+                        <div class="tiles-body-alt">
+                            <i class="fa fa-shopping-cart"></i>
+                            <div class="text-center">0</div>
+                            <small>persons</small>
+                        </div>
+                        <div class="tiles-footer">Details</div>
+                    </a>
+                </div>
+
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                    @*<a href=@Url.Action("GetOthersProjects", "Projects") class="info-tiles tiles-success">*@
+                    <a href="#" class="info-tiles tiles-success">
+                        <div class="tiles-heading">Total House Made</div>
+
+                        <div class="tiles-body-alt">
+                            <i class="fa fa-home"></i>
+                            <div class="text-center">0</div>
+                            <small>persons</small>
+                        </div>
+                        <div class="tiles-footer">Details</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        @*<div class="col-md-12">
+                    <div class="row">
+
+
+
+
+                        <div class="col-md-3 col-xs-12 col-sm-6">
+
+                            <a href="#" class="info-tiles tiles-brown">
+                                <div class="tiles-heading">House Made Total Male</div>
+                                <div class="tiles-body-alt">
+                                    <i class="fa fa-archive"></i>
+
+                                    <div class="text-center">120</div>
+                                    <small>persons</small>
+                                </div>
+                                <div class="tiles-footer">Details</div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-6">
+
+                            <a href="#" class="info-tiles tiles-green">
+                                <div class="tiles-heading">
+                                    House Made Total Female
+                                </div>
+                                <div class="tiles-body-alt" style="height:100px">
+
+                                    <i class="fa fa-group"></i>
+                                    <div class="text-center">10</div>
+                                    <small>Persons</small>
+                                </div>
+                                <div class="tiles-footer">Details</div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-6">
+
+                            <a href="#" class="info-tiles tiles-indigo">
+                                <div class="tiles-heading">Total Driver</div>
+                                <div class="tiles-body-alt">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    <div class="text-center">20</div>
+                                    <small>persons</small>
+                                </div>
+                                <div class="tiles-footer">Details</div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-3 col-xs-12 col-sm-6">
+
+                            <a href="#" class="info-tiles tiles-magenta">
+                                <div class="tiles-heading">Total Amaml(Only Worker)</div>
+
+                                <div class="tiles-body-alt">
+                                    <i class="fa fa-home"></i>
+                                    <div class="text-center">50</div>
+                                    <small>persons</small>
+                                </div>
+                                <div class="tiles-footer">Details</div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-6">
+
+                            <a href="#" class="info-tiles tiles-magenta">
+                                <div class="tiles-heading">Total Jordan Entry File</div>
+
+                                <div class="tiles-body-alt">
+                                    <i class="fa fa-home"></i>
+                                    <div class="text-center">50</div>
+                                    <small>persons</small>
+                                </div>
+                                <div class="tiles-footer">Details</div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-6">
+
+                            <a href="#" class="info-tiles tiles-magenta">
+                                <div class="tiles-heading">Todays Jordan Entry File</div>
+
+                                <div class="tiles-body-alt">
+                                    <i class="fa fa-home"></i>
+                                    <div class="text-center">50</div>
+                                    <small>persons</small>
+                                </div>
+                                <div class="tiles-footer">Details</div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-6">
+
+                            <a href="#" class="info-tiles tiles-info">
+                                <div class="tiles-heading">Total Not Delivery Passport</div>
+
+                                <div class="tiles-body-alt">
+                                    <i class="fa fa-home"></i>
+                                    <div class="text-center">50</div>
+                                    <small>persons</small>
+                                </div>
+                                <div class="tiles-footer">Details</div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-6">
+
+                            <a href="#" class="info-tiles tiles-purple">
+                                <div class="tiles-heading">Total Delivery Passport</div>
+
+                                <div class="tiles-body-alt">
+                                    <i class="fa fa-home"></i>
+                                    <div class="text-center">50</div>
+                                    <small>persons</small>
+                                </div>
+                                <div class="tiles-footer">Details</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-indigo">
+                    <div class="panel-heading">
+                        <h4>Location Overview</h4>
+                        <div class="options">
+                            <a href="javascript:;"><i class="fa fa-cog"></i></a>
+                            <a href="javascript:;"><i class="fa fa-wrench"></i></a>
+                            <a href="javascript:;" class="panel-collapse"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table" style="margin-bottom: 0px;">
+                                <thead>
+                                    <tr>
+
+                                        <th class="col-sm-8 ">Location</th>
+                                        <th class="col-sm-2">Count</th>
+                                        <th class="col-sm-2">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="selects">
+                                    @foreach (var item in @Model.lstApplicantLocationTotal)
+                                    {
+
+                                        <tr>
+
+                                            <td style="font-size: 100%;">@item.LocationName</td>
+                                            <td style="font-size: 100%;"><span class="label label-info">@item.AppLocationTotal</span> </td>
+                                            <td style="font-size: 100%;"> @Html.ActionLink("Go To List", "GetApplicantByLocation", "Applicant", new { id = item.LocationId }, new { @class = "btn btn-success btn-xs" })</td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                                @*<tfoot>
+                                        <tr class="active">
+                                            <td colspan="4" class="text-left">
+                                                <label for="action" style="margin-bottom:0">Action </label>
+                                                <select name="action">
+                                                    <option value="Edit">Edit</option>
+                                                    <option value="Aprove">Aprove</option>
+                                                    <option value="Move">Move</option>
+                                                    <option value="Delete">Delete</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tfoot>*@
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-indigo">
+                    <div class="panel-heading">
+                        <h4>Applicant Type Overview</h4>
+                        <div class="options">
+                            <a href="javascript:;"><i class="fa fa-cog"></i></a>
+                            <a href="javascript:;"><i class="fa fa-wrench"></i></a>
+                            <a href="javascript:;" class="panel-collapse"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table" style="margin-bottom: 0px;">
+                                <thead>
+                                    <tr>
+
+                                        <th class="col-sm-8 ">Applicant Type</th>
+                                        <th class="col-sm-2">Count</th>
+                                        <th class="col-sm-2">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="selects">
+                                    @foreach (var item in @Model.lstApplicantTypeTotal)
+                                    {
+
+                                        <tr>
+
+                                            <td style="font-size: 100%;">@item.ApplicationTypeName</td>
+
+                                            <td style="font-size: 100%;"><span class="label label-primary">@item.AppTypeTotal</span> </td>
+                                            <td style="font-size: 100%;"> @Html.ActionLink("Go To List", "Index", "Applicant", new { id = item.AppTypeTotal }, new { @class = "btn btn-success btn-xs" })</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                @*<tfoot>
+                                        <tr class="active">
+                                            <td colspan="4" class="text-left">
+                                                <label for="action" style="margin-bottom:0">Action </label>
+                                                <select name="action">
+                                                    <option value="Edit">Edit</option>
+                                                    <option value="Aprove">Aprove</option>
+                                                    <option value="Move">Move</option>
+                                                    <option value="Delete">Delete</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tfoot>*@
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div style="height:20px">
+            </div>
+        </div>
+        <div id="report" class="row">
+            <div class="col-md-6">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12 clearfix">
+                                <h4 class="pull-left" style="margin: 0 0 20px;">MMS Status<small> (Bar Chart)</small></h4>
+                                <div class="btn-group">
+                                    <div id="chart_div" style="height:350px">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-grape">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12 clearfix">
+                                <h4 class="pull-left" style="margin: 0 0 20px;">MMS Status<small> (Pie Chart)</small></h4>
+                                <div class="btn-group">
+
+                                    <div id="piechart_div" style="height:350px">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div style="height:100px">
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div style="height:100px">
+
+        </div>
+    </div>
+    @section Scripts {
+        @*@Scripts.Render("~/bundles/jqueryval")*@
+    }
+

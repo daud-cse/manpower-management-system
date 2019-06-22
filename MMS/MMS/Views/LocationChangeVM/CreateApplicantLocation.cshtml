@@ -1,0 +1,563 @@
+﻿@model MMS.Entities.ViewModels.LocationChangeVM
+
+@{
+    ViewBag.Title = "Location Info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+        var applicantLocation = {
+            listTemplate: "<tr><td>[materialid]</td><td>[material]</td><td>[RequiredQuantity]</td><td>[AvgPrice]</td><td>[UnitofmeasurementName]</td><td><button type='button' class='remove btn btn-danger btn-sm'><span class='glyphicon glyphicon-remove-sign'></span>Delete</button></td></tr>",
+            Applicant: {
+
+            },
+            Applicant: [],
+            Initialize: function () {
+
+
+
+
+                $("#page-leftbar li").removeClass("active");
+                $("#liApplicant").addClass("active");
+                $("#liApplicantLocationChange").addClass("active");
+
+
+                $("#applicantFileLot_AgentID").attr('data-live-search', true);
+                $("#NationalityID").attr('data-live-search', true);
+                $("#ResidentialUpazilaID").attr('data-live-search', true);
+                $("#PermanentUpazilaID").attr('data-live-search', true);
+                $("#DistrictID").attr('data-live-search', true);
+                $("#applicantLocationDetail_LocationMapDetailID").attr('data-live-search', true);
+                if ('@Model.applicant.ID' == '0') {
+                    $('#applicant_ID').val('');
+
+                }
+                $('#Id').focus();
+                $("input[data-val-date]").removeAttr("data-val-date");
+                $('.input-group.date').datepicker({
+                    todayBtn: "linked",
+                    language: "it",
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd/mm/yyyy'
+                });
+
+                $("#btnAdd").click(function () {
+
+                });
+                $("#IsTaskCompleted").click(function () {
+
+                    if (confirm("Are you Confirm Send to Next Location?")) {
+                        var MovementResultID = $("#applicantMovement_MovementResultID").val();
+                        if (MovementResultID == 3) {
+                            $("#IsTaskCompleted").prop('checked', true);
+                        }
+                        else {
+                            alert("If You Want Send Next Location You must be Select Activity Status done.");
+                            $("#IsTaskCompleted").prop('checked', false);
+                        }
+                    }
+                    else {
+                        $("#IsTaskCompleted").prop('checked', false);
+                    }
+                });
+                $("#applicantMovement_MovementResultID").change(function () {
+                    $("#IsTaskCompleted").prop('checked', false);
+                });
+
+                @*var url = '@Url.Content("~/LocationChangeVM/GetApplicantLocation")';
+                $('#applicant_ID').change(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: "Id=" + $('#applicant_ID').val()+"&IsApplicant=true",
+                        dataType: "json",
+                        success: function (data) {
+                            var url = "../LocationChangeVM/GetApplicantLocation?Id=" + $("#applicant_ID").val() + "&IsApplicant=true";
+                             window.location = url;
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                });
+                $('#applicant_PassportNo').change(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: "Id=" + $('#applicant_PassportNo').val() + "&IsApplicant=false",
+                        dataType: "json",
+                        success: function (data) {
+
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                });*@
+                //$('#applicant_ID').change(function () {
+                //    var applicantID = $('#applicant_ID').val();
+
+                //    var url = "../LocationChangeVM/GetApplicantLocation?Id=" + $("#applicant_ID").val() + "&IsApplicant=true";
+                //    window.location = url;
+                //});
+                //$('#applicant_PassportNo').change(function () {
+                //    var passportNo = $('#applicant_PassportNo').val();
+
+                //    var url = "../LocationChangeVM/GetApplicantLocation?Id=" + $("#applicant_PassportNo").val() + "&IsApplicant=false";
+                //    window.location = url;
+                //});
+
+            },
+            GetMaterialList: function (id) {
+                var url = '@Url.Content("~/RequsitionForStockOut/GetStockOutMaterialList")';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { id: id },
+                    dataType: "json",
+                    success: function (data) {
+
+
+                        for (var i = 0; i < data.StockOutList.length; i++) {
+                            var value = materialforrequsition.listTemplate.replace("[materialid]", data.StockOutList[i].Material.Id).replace("[material]", data.StockOutList[i].Material.Name).replace("[RequiredQuantity]", data.StockOutList[i].Quantity).replace("[AvgPrice]", data.StockOutList[i].replace("[UnitofmeasurementName]", data.StockOutList[i].Material.Unitofmeasurement.Name));
+                            $("#tbmaterials").prepend(value);
+                        }
+                        if (data.StockOutList.length > 0) {
+                            $("#TrainingCode").val(data.StockOutList[0].Requsition.TrainingCode);
+                            $("#TotalTranee").val(data.StockOutList[0].Requsition.TotalTranee);
+                            $("#NoOFParticipants").val(data.StockOutList[0].Requsition.NoOFParticipants);
+                            $("#Remarks").val(data.StockOutList[0].Requsition.Remarks);
+                            $("#EventDate").val(data.StockOutList[0].Requsition.EventDate);
+                        }
+
+
+                    },
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            },
+            Typehead: function () {
+            }
+        }
+        applicantLocation.Initialize();
+    });
+    function EmptyOnKeyUp(el) {
+        el.value = "";
+    }
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Applicant Operation</li>
+    <li class="active">Applicant Location Info</li>
+}
+
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+
+    .blink_text {
+        animation: 2s blinker linear infinite;
+        -webkit-animation: 2s blinker linear infinite;
+        -moz-animation: 2s blinker linear infinite;
+        color: red;
+    }
+</style>
+<div style="margin-bottom:10px">
+    @using (Html.BeginForm("GetApplicantLocation", "LocationChangeVM", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {<div class="row" style="margin-bottom:10px">
+        <input type="hidden" class="form-control" id="IsApplicant" name="IsApplicant" value="true">
+        @Html.LabelFor(model => model.applicant.ID, new { @class = "col-sm-4 control-label" })
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-6">
+            <div class="form-inline">
+                <input type="text" required class="form-control" id="Id" name="Id" placeholder="Give Applicant Id">
+                <input type="submit" value="Search by Applicant No" class="btn-green btn" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+        </div>
+    </div>
+    }
+    @using (Html.BeginForm("GetApplicantLocation", "LocationChangeVM", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {<div class="row">
+        <input type="hidden" class="form-control" id="IsApplicant" name="IsApplicant" value="false">
+        @Html.LabelFor(model => model.applicant.PassportNo, new { @class = "col-sm-4 control-label" })
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-6">
+            <div class="form-inline">
+                <input type="text" required class="form-control" id="Id" name="Id" placeholder="Give Passport No">
+                <input type="submit" value="Search By Passport No" class="btn-green btn" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+        </div>
+    </div>
+    }
+
+</div>
+@using (Html.BeginForm("UpdateApplicantLocation", "LocationChangeVM", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+
+    @Html.AntiForgeryToken()
+
+
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(x => x.applicant.NextLocationID)
+
+
+    @Html.HiddenFor(x => x.applicantMovement.ID)
+    @Html.HiddenFor(x => x.applicantMovement.PercentageOfComplete)
+    @Html.HiddenFor(x => x.applicant.CurrentLocationID)
+
+    @Html.HiddenFor(x => x.applicant.Location.IsSendAgentMesasge)
+    @Html.HiddenFor(x => x.applicant.Location.IsSendApplicantMesasge)
+    @Html.HiddenFor(x => x.applicant.Location.IsSendGeneralMesasge)
+
+    @Html.HiddenFor(x => x.applicant.Location.AgentMessageBody)
+    @Html.HiddenFor(x => x.applicant.Location.ApplicantMessageBody)
+    @Html.HiddenFor(x => x.applicant.Location.GeneralMessageBody)
+
+
+    @Html.HiddenFor(x => x.applicantMovement.LocationID)
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">@ViewBag.Title</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <fieldset class="fileSets">
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicant.ID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.applicant.ID, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.applicant.ID)
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicant.PassportNo, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.applicant.PassportNo, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.applicant.PassportNo)
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicant.Name, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.applicant.Name, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.applicant.Name)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicant.ApplicantPhoneNo, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.applicant.ApplicantPhoneNo, new { @class = "form-control", @readonly = "readonly" })
+                                <span class="blink_text">Please Check Applicant Mobile No Before Click Next Activity</span>
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+
+                                @Html.LabelFor(model => model.applicant.ApplicantType, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.applicant.ApplicantType.Name, new { @class = "form-control", @readonly = "readonly" })
+
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicant.CurrentLocationID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.applicant.Location.Name, new { @class = "form-control", style = "background-color:khaki;", @readonly = "readonly" })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicant.NextLocationID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.applicant.Location1.Name, new { @class = "form-control", style = "background-color:lime;", @readonly = "readonly" })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicantMovement.MovementResultID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.applicantMovement.MovementResultID, new SelectList(Model.kvpMovementResult, "Key", "Value", Model.applicantMovement.MovementResultID), "Select Result", new { @class = "selectpicker show-tick form-control" })
+                                @Html.ValidationMessageFor(model => model.applicantMovement.MovementResultID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-8">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.applicantMovement.IsSucceed) @Html.LabelFor(model => model.applicantMovement.IsSucceed)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-sm-6">
+                    <fieldset class="fileSets">
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicant.Agent.Name, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.applicant.Agent.Name, new { @class = "form-control", @readonly = "readonly" })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicant.Agent.Mobile, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.applicant.Agent.Mobile, new { @class = "form-control", @readonly = "readonly" })
+                                <span class="blink_text">Please Check Agent Mobile No Before Click Next Activity</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.applicantMovement.ProbableMoveDate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <div class='input-group date' id='ProbableMoveDate'>
+                                    @Html.TextBoxFor(model => model.applicantMovement.ProbableMoveDate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                                    @Html.ValidationMessageFor(model => model.applicantMovement.ProbableMoveDate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        @if (@Model.applicant.CurrentLocationID == 10)
+                        {//10 flight
+                            <div class="form-group">
+                                @Html.Label("Actual Flight Date", new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    <div class='input-group date' id='ActualMoveDate'>
+                                        @Html.TextBoxFor(model => model.applicantMovement.ActualMoveDate, new { @class = "form-control", onkeyup = "EmptyOnKeyUp(this);", required = "required", placeholder = "Enter date here..." })
+                                        @Html.ValidationMessageFor(model => model.applicantMovement.ActualMoveDate)
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-calendar">
+                                            </span>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.applicantMovement.ActualMoveDate, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    <div class='input-group date' id='ActualMoveDate'>
+                                        @Html.TextBoxFor(model => model.applicantMovement.ActualMoveDate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                                        @Html.ValidationMessageFor(model => model.applicantMovement.ActualMoveDate)
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-calendar">
+                                            </span>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.applicantMovement.ActualReceiveDate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <div class='input-group date' id='ActualReceiveDate'>
+                                    @Html.TextBoxFor(model => model.applicantMovement.ActualReceiveDate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                                    @Html.ValidationMessageFor(model => model.applicantMovement.ActualReceiveDate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.applicantMovement.ExpectedReceiveDate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <div class='input-group date' id='ExpectedReceiveDate'>
+                                    @Html.TextBoxFor(model => model.applicantMovement.ExpectedReceiveDate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                                    @Html.ValidationMessageFor(model => model.applicantMovement.ExpectedReceiveDate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.applicantMovement.Description, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.applicantMovement.Description, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.applicantMovement.Description)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-8">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.applicantMovement.IsTaskCompleted, new { id = "IsTaskCompleted" }) @Html.Label("Is Send to Next Activity")
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+
+            </div>
+            <div class="row">
+
+                @if (Model.ControlTypeId == 1)//DropDown
+                {
+
+
+                    @Html.HiddenFor(model => model.applicantLocationDetail.ApplicantID)
+                    @Html.HiddenFor(model => model.applicantLocationDetail.ID)
+                    @Html.HiddenFor(model => model.applicantLocationDetail.ApplicantMovementID)
+                    @Html.HiddenFor(model => model.applicantLocationDetail.LocationID)
+
+                    <div class="form-group">
+
+                        @Html.Label("Name", new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-6">
+                            @Html.DropDownListFor(model => model.applicantLocationDetail.LocationMapDetailID, new SelectList(Model.kvpLocationMapDetail, "Key", "Value", Model.applicantLocationDetail.LocationMapDetailID), "Select Name", new { @class = "selectpicker show-tick form-control" })
+                            @Html.ValidationMessageFor(model => model.applicantLocationDetail.LocationMapDetailID)
+                        </div>
+                    </div>
+
+
+                }
+                else if (Model.ControlTypeId == 2)//CheckBox
+                {
+                    <table class="table table-bordered">
+                        <tbody>
+
+                            @for (var i = 0; i < Model.lstApplicantLocationDetail.Count; i++)
+                            {
+                                <tr>
+                                    @Html.HiddenFor(model => model.lstApplicantLocationDetail[i].ApplicantID)
+                                    @Html.HiddenFor(model => model.lstApplicantLocationDetail[i].ApplicantMovementID)
+                                    @Html.HiddenFor(model => model.lstApplicantLocationDetail[i].LocationID)
+                                    @Html.HiddenFor(model => model.lstApplicantLocationDetail[i].LocationMapDetailID)
+                                    @Html.HiddenFor(model => model.lstApplicantLocationDetail[i].ID)
+                                   
+                                    <td>
+                                        @Html.CheckBoxFor(model => model.lstApplicantLocationDetail[i].IsSucceed)
+                                        @Html.DisplayFor(model => model.lstApplicantLocationDetail[i].LocationMapDetail.Name)
+                                    </td>
+                                    
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                }
+                else if (Model.ControlTypeId == 3)//Text Box
+                {
+
+                    @Html.HiddenFor(model => model.applicantLocationDetail.ApplicantID)
+                    @Html.HiddenFor(model => model.applicantLocationDetail.ID)
+                    @Html.HiddenFor(model => model.applicantLocationDetail.ApplicantMovementID)
+                    @Html.HiddenFor(model => model.applicantLocationDetail.LocationID)
+
+                    <div class="form-group">
+
+                        @Html.Label("Name", new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-6">
+
+
+                            @Html.LabelFor(model => model.applicantLocationDetail.Description, new { @class = "col-sm-3 control-label" })
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(model => model.applicantLocationDetail.Description, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.applicantLocationDetail.Description)
+
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="btn-toolbar">
+                <input type="submit" value="Update Location" class="btn-primary btn" onclick=" return UpdateConfirm()" />
+            </div>
+        </div>
+    </div>
+
+
+}
+
+
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/Mask")
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+}

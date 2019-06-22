@@ -1,0 +1,90 @@
+﻿@using MvcPaging
+@model MvcPaging.IPagedList<MMS.Entities.Models.Agent>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>
+           Photo
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().AgentTypeID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().AgentId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().IsActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Mobile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().DivisionID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().DistrictID)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img width="50" height="30" src="~/ContentDetails/GetImage?id=@item.AgentPhotoID">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>            
+            <td>
+                @Html.DisplayFor(modelItem => item.AgentType.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AgentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Division.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.District.Name)
+            </td>
+            <td>
+
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-success btn-xs" })
+            
+
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="pager">
+    @Html.Raw(Html.Pager(
+            new Options
+            {
+                PageSize = Model.PageSize,
+                TotalItemCount = Model.TotalItemCount,
+                CurrentPage = Model.PageNumber,
+                ItemTexts = new ItemTexts() { Next = "Next", Previous = "Previous" },
+                ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+                TooltipTitles = new TooltipTitles() { Next = "Next page {0}", Previous = "Previous page {0}", Page = "Go to page {0}" },
+                Size = Size.normal,
+                Alignment = Alignment.centered,
+                IsShowControls = true,
+                IsShowFirstLast = true,
+                IsShowPages = true
+            }, new { controller = "Agent", action = "Index", searchItem = ViewData["searchItem"] }))
+    <div class="well">
+        Showing <span class="badge badge-success">@Model.ItemStart</span> to <span class="badge badge-success">@Model.ItemEnd</span>
+        of <span class="badge badge-info">@Model.TotalItemCount</span> entries
+    </div>
+</div>

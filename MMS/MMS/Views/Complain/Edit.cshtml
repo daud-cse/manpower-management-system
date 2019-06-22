@@ -1,0 +1,448 @@
+﻿@model MMS.Entities.Models.Complain
+
+@{
+    ViewBag.Title = "Complain Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var complainInfo = {
+            listTemplate: "<tr><td>[materialid]</td><td>[material]</td><td>[RequiredQuantity]</td><td>[AvgPrice]</td><td>[UnitofmeasurementName]</td><td><button type='button' class='remove btn btn-danger btn-sm'><span class='glyphicon glyphicon-remove-sign'></span>Delete</button></td></tr>",
+            complainInfo: {
+
+            },
+            complainInfo: [],
+            Initialize: function () {
+
+
+                $("#page-leftbar li").removeClass("active");
+
+                $("#liApplicant").addClass("active");
+                $("#liComplainBox").addClass("active");
+
+
+
+                $("#AgentId").attr('data-live-search', true);
+                $("#NationalityID").attr('data-live-search', true);
+                $("#ComplainTypeId").attr('data-live-search', true);
+                var optionalLabel = 'Please Select..';
+                $('#ddlDivisionId').change(function (event) {
+
+                    if ($('#ddlDivisionId').val() == '' || $('#ddlDivisionId').val() == null) {
+                        $("#ddlDistrict").empty();
+                        $("#PermanentUpazilaID").empty();
+                        $("#ddlDistrict").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+                        $("#PermanentUpazilaID").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+                        return false;
+                    }
+                    else {
+                        LoadDropDownList('ddlDistrict'
+                     , '@Url.Content("~/District/GetDistrictByDivisionId")?divisionId=' + $('#ddlDivisionId').val()
+                  , "Please Select.."
+                  , null);
+                        $("#PermanentUpazilaID").empty();
+                        $("#PermanentUpazilaID").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+
+                    }
+
+                });
+                $('.input-group.date').datepicker({
+                    todayBtn: "linked",
+                    language: "it",
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd/mm/yyyy'
+                });
+
+                $('#ddlDistrict').change(function (event) {
+                    LoadDropDownList('UpazilaId'
+                       , '@Url.Content("~/Upazila/GetUpazilaByDistrictId")?districtId=' + $('#ddlDistrict').val()
+                    , "Please Select.."
+                    , null);
+                });
+                complainInfo.Typehead();
+            },
+            Typehead: function () {
+                $('#searchItem').typeahead('destroy');
+                $('#searchItem').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength:1
+                },
+                {
+                    items: 8,
+                    name: 'Id',
+                    displayKey: 'Name',
+                    property: "Name",
+                    source: function (UserName, process) {
+                        var url = '@Url.Content("~/Applicant/GetCompletedApplicantList")';
+                        return $.getJSON(url, { searchItem: $("#searchItem").val() }, function (data) {
+                            if (data == "") {
+                                //  alert("Applicant Not found.");
+                              //  $("#searchItem").val("");
+                                $("#searchItem").focus()
+                                return false;
+                            }
+                            return process(data);
+
+                        });
+                    },
+                    updater: function (item) {
+                        return item.Name;
+                    }
+                }).on('typeahead:selected', function (obj, datum) {
+                    //alert(datum.ID);
+                    if (datum.ID==0) {
+                        alert("Invalid Applicant ID");
+                        $("#searchItem").val("");
+                        $("#searchItem").focus()
+                        return false;
+                    }
+                    $("#ApplicantId").val(datum.ID);
+                    $("#AgentId").val(datum.Agent.ID);
+                    $("#Applicant_Name").val(datum.Name);
+                    $("#Applicant_FathersName").val(datum.FathersName);
+                    $("#Applicant_MothersName").val(datum.MothersName);
+                    $("#Applicant_Agent_Name").val(datum.Agent.Name);
+                    $("#Applicant_ApplicantCountryName_vw").val(datum.ApplicantCountryName_vw);
+                });
+            },
+        }
+        complainInfo.Initialize();
+
+    });
+
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">Agent Setup</li>
+}
+@*@section title
+    {
+        @ViewBag.Title
+    }*@
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+<p> @Html.ActionLink("Go Back to Complain List", "Index", null, null, new { @class = "btn btn-success" })</p>
+<hr />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(x => x.AgentId)
+    @Html.HiddenFor(x => x.ID)
+    <div class="panel panel-info">
+
+        <div class="panel-heading">
+            @ViewBag.Title.ToString()
+
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">Basic Info</legend>
+                        <div class="form-group">
+                            @Html.Label("Person Name", new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.ComplainPersonName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ComplainPersonName)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.ComplainTypeId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.ComplainTypeId, new SelectList(Model.kvpComplainType, "Key", "Value", Model.ComplainTypeId), "Select Complain Type", new { @class = "selectpicker show-tick form-control" })
+                                @Html.ValidationMessageFor(model => model.ComplainTypeId)
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+
+                                @Html.LabelFor(model => model.AgentId, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.DropDownListFor(model => model.AgentId, new SelectList(Model.kvpAgent, "Key", "Value", Model.AgentId), "Select Agent", new { @class = "selectpicker show-tick form-control" })
+                                    @Html.ValidationMessageFor(model => model.AgentId)
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+
+                            @Html.Label("Applicant Search", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <input id="searchItem" class="form-control" type="text" size="40" placeholder="Name">
+                                @*@Html.TextBoxFor(model => model.ApplicantId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ApplicantId)*@
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+
+                                @Html.Label("Agent Id", new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.AgentId, new { @class = "form-control", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.AgentId)
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+
+                            @Html.Label("Agent Name", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.Applicant.Agent.Name, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Applicant.Agent.Name)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.Label("Applicant Id", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.ApplicantId, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.ApplicantId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.Label("Applicant Name", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.Applicant.Name, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Applicant.Name)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.Label("Country Name", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.Applicant.ApplicantCountryName_vw, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Applicant.ApplicantCountryName_vw)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.Label("Father Name", new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.Applicant.FathersName, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Applicant.FathersName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.Label("Mother Name", new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.Applicant.MothersName, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Applicant.MothersName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.ComplainStatusId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.ComplainStatusId, new SelectList(Model.kvpComplainStatus, "Key", "Value", Model.ComplainStatusId), "Select Complain Status", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ComplainStatusId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.ComplainPersonMobileNo, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.ComplainPersonMobileNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ComplainPersonMobileNo)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ComplainStartDate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <div class='input-group date' id='ComplainStartDate'>
+                                    @Html.TextBoxFor(model => model.ComplainStartDate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                                    @Html.ValidationMessageFor(model => model.ComplainStartDate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ActualEndDate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <div class='input-group date' id='ActualEndDate'>
+                                    @Html.TextBoxFor(model => model.ActualEndDate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                                    @Html.ValidationMessageFor(model => model.ActualEndDate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ExpectedEndDate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <div class='input-group date' id='ExpectedEndDate'>
+                                    @Html.TextBoxFor(model => model.ExpectedEndDate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                                    @Html.ValidationMessageFor(model => model.ExpectedEndDate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.ComplainDetails, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.ComplainDetails, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ComplainDetails)
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+                <div class="col-sm-6">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">Address Info</legend>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.EmailAddress, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.EmailAddress)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.ComplainPersonAddress, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.ComplainPersonAddress, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ComplainPersonAddress)
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-8">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsActive) @Html.LabelFor(model => model.IsActive)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.ComplainCountryId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.ComplainCountryId, new SelectList(Model.kvpCountry, "Key", "Value", Model.ComplainCountryId), "Select Complain Country", new { @class = "selectpicker show-tick form-control" })
+                                @Html.ValidationMessageFor(model => model.ComplainCountryId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.DivisionId, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.DivisionId, new SelectList(Model.kvpDivision, "Key", "Value", Model.DivisionId), "Select Division", new { @class = "form-control", id = "ddlDivisionId" })
+                                @Html.ValidationMessageFor(model => model.DivisionId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.DistrictId, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.DistrictId, new SelectList(Model.kvpDistrict, "Key", "Value", Model.DistrictId), "Select District", new { @class = "", id = "ddlDistrict" })
+                                @Html.ValidationMessageFor(model => model.DistrictId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.UpazilaId, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.UpazilaId, new SelectList(Model.kvpUpazila, "Key", "Value", Model.UpazilaId), "Select Upazil", new { @class = "" })
+                                @Html.ValidationMessageFor(model => model.UpazilaId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.Comments, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Comments)
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="btn-toolbar">
+                        <input type="submit" value="Create" class="btn-primary btn" onclick=" return EditConfirm()" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrapth")
+}

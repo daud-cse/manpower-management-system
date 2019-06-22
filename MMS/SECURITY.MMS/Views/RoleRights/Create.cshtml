@@ -1,0 +1,224 @@
+﻿@model MMS.Entities.Models.RoleRightss
+
+@{
+    ViewBag.Title = "Role Rights Assign";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var roleRight = {           
+            Initialize: function () {
+
+                $("#page-leftbar li").removeClass("active");
+                $("#liAdmin").addClass("active");
+                $("#liRoleRightSetup").addClass("active");
+
+
+                $("#applicantFileLot_AgentID").attr('data-live-search', true);
+                $("#NationalityID").attr('data-live-search', true);
+                $("#ResidentialUpazilaID").attr('data-live-search', true);
+                $("#PermanentUpazilaID").attr('data-live-search', true);
+                $("#DistrictID").attr('data-live-search', true);
+                $("#CountryID").attr('data-live-search', true);
+
+                $("input[data-val-date]").removeAttr("data-val-date");
+                $('.input-group.date').datepicker({
+                    todayBtn: "linked",
+                    language: "it",
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd/mm/yyyy'
+                });
+                $('#applicant_PassportNo').change(function () {
+
+                    var url = '@Url.Content("~/Applicant/GetApplicantByPassportNo")';
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: { passportNo: $('#applicant_PassportNo').val() },
+                        dataType: "json",
+                        success: function (data) {
+
+                            if (data.PassportNo != null || data.PassportNo == '') {
+                                alert("Passport No Already Exist");
+                                $('#applicant_PassportNo').val('');
+                                $('#applicant_PassportNo').focus();
+                                return false;
+                            }
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                });
+                var optionalLabel = 'Please Select..';
+                $('#ddlmoduleId').change(function (event) {
+
+                    if ($('#ddlmoduleId').val() == '' || $('#ddlmoduleId').val() == null) {
+                        $("#ddlroleId").empty();
+
+                        $("#ddlroleId").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+                        return false;
+                    }
+                    else {
+                        LoadDropDownList('ddlroleId'
+                     , '@Url.Content("~/Role/GetRoleByModuleId")?moduleId=' + $('#ddlmoduleId').val()
+                      , "Please Select.."
+                      , null);
+
+                    }
+
+
+                });
+                $('#ddlroleId').change(function (event) {
+
+                    var url = '@Url.Content("~/RoleRights/GetRoleRight")';
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: { moduleId: $('#ddlmoduleId').val(), RoleId: $('#ddlroleId').val() },
+                        dataType: "html",
+                        success: function (data) {
+                            $('#RoleRights_Data_Table').html(data);
+                            $('#RoleRights_Data_Table').show();                           
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+
+
+                });
+            },
+            GetAgent: function (id) {
+                var url = '@Url.Content("~/Agent/GetAgent")';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { id: id },
+                    dataType: "json",
+                    success: function (data) {
+
+                        for (var i = 0; i < data.StockOutList.length; i++) {
+                            var value = materialforrequsition.listTemplate.replace("[materialid]", data.StockOutList[i].Material.Id).replace("[material]", data.StockOutList[i].Material.Name).replace("[RequiredQuantity]", data.StockOutList[i].Quantity).replace("[AvgPrice]", data.StockOutList[i].replace("[UnitofmeasurementName]", data.StockOutList[i].Material.Unitofmeasurement.Name));
+                            $("#tbmaterials").prepend(value);
+                        }
+                    },
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            },
+
+        }
+        roleRight.Initialize();
+
+    });
+
+
+
+</script>
+
+
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">Applicant Create</li>
+}
+@*@section title
+    {
+        @ViewBag.Title
+    }*@
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+
+<div class="row">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">@ViewBag.Title </h3>
+        </div>
+        <div class="panel-body">
+           
+                <div class="row">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-8">
+                        <fieldset class="fileSets">
+                            <div class="form-group">
+
+                                @Html.Label("Module Name", new { @class = "col-sm-4 control-label required" })
+                                <div class="col-sm-8">
+                                    @Html.DropDownList("ModuleId", new SelectList(Model.kvpModule, "Key", "Value", "ModuleId"), "Select Module", new { id = "ddlmoduleId" })
+
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="form-group">
+
+                                @Html.LabelFor(model => model.Role.RoleName, new { @class = "col-sm-4 control-label required" })
+                                <div class="col-sm-8">
+                                    @Html.DropDownListFor(model => model.RoleId, new SelectList(Model.kvpRole, "Key", "Value", Model.kvpRole), "Select Role", new { id = "ddlroleId" })
+                                    @Html.ValidationMessageFor(model => model.RoleId)
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-2">
+                    </div>
+                </div>
+
+            </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12" id="RoleRights_Data_Table">
+
+    </div>
+</div>
+
+    @section Scripts {
+
+        @Scripts.Render("~/bundles/Mask")
+        @Scripts.Render("~/bundles/jqueryval")
+
+
+    }

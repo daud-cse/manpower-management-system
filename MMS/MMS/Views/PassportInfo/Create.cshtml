@@ -1,0 +1,332 @@
+﻿@model MMS.Entities.Models.PassportInfo
+
+@{
+    ViewBag.Title = "Customer Passport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var passportInfo = {
+            listTemplate: "<tr><td>[materialid]</td><td>[material]</td><td>[RequiredQuantity]</td><td>[AvgPrice]</td><td>[UnitofmeasurementName]</td><td><button type='button' class='remove btn btn-danger btn-sm'><span class='glyphicon glyphicon-remove-sign'></span>Delete</button></td></tr>",
+            agent: {
+
+            },
+            agent: [],
+            Initialize: function () {
+
+              
+
+                $("#page-leftbar li").removeClass("active");
+                $("#liApplicant").addClass("active");
+                $("#liCustomerPassport").addClass("active");
+
+
+
+                $("#AgentTypeID").attr('data-live-search', true);
+                $("#NationalityID").attr('data-live-search', true);               
+                $("#CustomerId").attr('data-live-search', true);
+               
+                $("input[data-val-date]").removeAttr("data-val-date");
+                $('.input-group.date').datepicker({
+                    todayBtn: "linked",
+                    language: "it",
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd/mm/yyyy'
+                });
+                //$("#TentativeCollectionDate").datepicker({
+                //    todayBtn: "linked",
+                //    language: "it",
+                //    autoclose: true,
+                //    todayHighlight: true,
+                //    format: 'dd/mm/yyyy'
+                //});
+               // $("#TentativeCollectionDate").datepicker();
+            },
+            GetAgent: function (id) {
+                var url = '@Url.Content("~/Agent/GetAgent")';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { id: id },
+                    dataType: "json",
+                    success: function (data) {
+
+                        for (var i = 0; i < data.StockOutList.length; i++) {
+                            var value = materialforrequsition.listTemplate.replace("[materialid]", data.StockOutList[i].Material.Id).replace("[material]", data.StockOutList[i].Material.Name).replace("[RequiredQuantity]", data.StockOutList[i].Quantity).replace("[AvgPrice]", data.StockOutList[i].replace("[UnitofmeasurementName]", data.StockOutList[i].Material.Unitofmeasurement.Name));
+                            $("#tbmaterials").prepend(value);
+                        }
+                    },
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            },
+
+        }
+        passportInfo.Initialize();
+
+    });
+    //function AgentImageCheck() {
+    //    // alert("dsfd");
+    //    if (typeof ($("#uploadAgentImage")[0].files) != "undefined") {
+    //        var size = parseFloat($("#uploadAgentImage")[0].files[0].size / 1024).toFixed(2);
+    //        if (size > 300) {
+    //            alert("Image is not greater than 300KB");
+    //            return false;
+    //        }
+    //        else {
+    //            true;
+    //        }
+    //        // alert(size + " KB.");
+    //    } else {
+    //        alert("This browser does not support HTML5.");
+    //    }
+    //}
+
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Passport</li>
+    <li class="active">Passport Info</li>
+}
+@*@section title
+    {
+        @ViewBag.Title
+    }*@
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+<p> @Html.ActionLink("Go Back to Passport List", "Index", null, null, new { @class = "btn btn-success" })</p>
+<hr />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="panel panel-info">
+
+        <div class="panel-heading">
+            @ViewBag.Title.ToString()
+
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">Basic Info</legend>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.CustomerId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.CustomerId, new SelectList(Model.kvpCustomer, "Key", "Value", Model.CustomerId), "Select Customer", new { @class = "selectpicker show-tick form-control" })
+                                @Html.ValidationMessageFor(model => model.CustomerId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.DeliverySlipNo, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.DeliverySlipNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.DeliverySlipNo)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.OwnerName, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.OwnerName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.OwnerName)
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                            @Html.Label("Photo (300 kb):", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control" name="uploadAgentImage" id="uploadAgentImage" onchange="checkPhoto(this)" />
+                            </div>
+                        </div>*@
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.OwerMobileNo, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.OwerMobileNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.OwerMobileNo)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EnrolementDate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <div class='input-group date' id='EnrolementDate'>
+                                    @Html.TextBoxFor(model => model.EnrolementDate,new {@class = "form-control", placeholder = "Enter date here...", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.EnrolementDate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TentativeCollectionDate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <div class='input-group date' id='TentativeCollectionDate'>
+                                    @Html.TextBoxFor(model => model.TentativeCollectionDate, new { @class = "form-control", placeholder = "Enter date here...", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.TentativeCollectionDate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+
+                                </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.PreviousPassportNo, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.PreviousPassportNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PreviousPassportNo)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Description, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-sm-6">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">Address Info</legend>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.NewPassportNo, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.NewPassportNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.NewPassportNo)
+                            </div>
+                        </div>
+                     
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-8">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsDeliveryDone) @Html.LabelFor(model => model.IsDeliveryDone)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-8">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsReceivedCompleted) @Html.LabelFor(model => model.IsReceivedCompleted)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SexTypeId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.SexTypeId, new SelectList(Model.kvpSex, "Key", "Value", Model.SexTypeId), "Select Sex", new { @class = "form-control", id = "" })
+                                @Html.ValidationMessageFor(model => model.SexTypeId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MaritalStatusId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.MaritalStatusId, new SelectList(Model.kvpMaritalStatus, "Key", "Value", Model.MaritalStatusId), "Select Marital Status", new { @class = "", id = "" })
+                                @Html.ValidationMessageFor(model => model.MaritalStatusId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.RPOTypeId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.RPOTypeId, new SelectList(Model.kvpRPOType, "Key", "Value", Model.RPOTypeId), "Select RPO Type", new { @class = "", id = "" })
+                                @Html.ValidationMessageFor(model => model.RPOTypeId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.PassPortTypeId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.PassPortTypeId, new SelectList(Model.kvpPassPortType, "Key", "Value", Model.PassPortTypeId), "Select PassPort Type", new { @class = "" })
+                                @Html.ValidationMessageFor(model => model.PassPortTypeId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.Description, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="btn-toolbar">
+                        <input type="submit" value="Create" class="btn-primary btn" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

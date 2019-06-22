@@ -1,0 +1,6 @@
+E:\MPMS NEW\Manpower Management System(MMS)\Source\Repository.Pattern\bin\Release\Repository.Pattern.dll.config
+E:\MPMS NEW\Manpower Management System(MMS)\Source\Repository.Pattern\bin\Release\Repository.Pattern.dll
+E:\MPMS NEW\Manpower Management System(MMS)\Source\Repository.Pattern\bin\Release\Repository.Pattern.pdb
+E:\MPMS NEW\Manpower Management System(MMS)\Source\Repository.Pattern\obj\Release\Repository.Pattern.dll
+E:\MPMS NEW\Manpower Management System(MMS)\Source\Repository.Pattern\obj\Release\Repository.Pattern.pdb
+E:\MPMS NEW\Manpower Management System(MMS)\Source\Repository.Pattern\obj\Release\Repository.Pattern.csprojResolveAssemblyReference.cache

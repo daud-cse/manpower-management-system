@@ -1,0 +1,87 @@
+﻿@using MvcPaging
+@model IPagedList<MMS.Entities.Models.Agent>
+@{
+    ViewBag.Title = "Agent List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Agent</li>
+    <li class="active">Agent List</li>
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#page-leftbar li").removeClass("active");
+        $("#liAdmin").addClass("active");
+        $("#liAgent").addClass("active");
+        
+    });
+
+    function beginPaging(args) {
+        // Animate
+        $('#grid-list').fadeOut('normal');
+    }
+
+    function successPaging() {
+        // Animate
+        $('#grid-list').fadeIn('normal');
+        $('a').tooltip();
+    }
+
+    function failurePaging() {
+        alert("Could not retrieve list.");
+    }
+</script>
+<style type="text/css">
+    .form-inline .form-control {
+        width: 100%;
+    }
+
+    .form-inline input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .form-inline .form-group {
+        width: 80%;
+    }
+
+    /*.margin {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }*/
+</style>
+@section title
+{
+    @ViewBag.Title
+}
+
+
+
+@using (Html.BeginForm("Index", "Agent", FormMethod.Get))
+{
+
+    <div class="row margin">
+        <div class="col-md-5">
+            @*@if ((GolbalSession.gblSession.UserRights.Exists(x => x.Equals(18))))
+                {*@
+            <p>
+            <p> @Html.ActionLink("Create New Agent", "Create", "Agent", null, new { @class = "btn btn-success btn-large" })</p>
+
+            </p>
+            @*}*@
+        </div>
+        <div class="form-inline col-md-6" style="margin-bottom: 20px">
+
+            <div class="form-group">
+                <input type="text" class="form-control " id="searchItem" name="searchItem" placeholder="Search item" value="@ViewData["searchItem"]">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    <div id="grid-list">
+        @{ Html.RenderPartial("_AgentList", Model); }
+    </div>
+}

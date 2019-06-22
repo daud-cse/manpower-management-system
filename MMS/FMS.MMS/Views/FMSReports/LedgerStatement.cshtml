@@ -1,0 +1,231 @@
+﻿@model MMS.Entities.ReportsModels.LedgerStatement
+
+@{
+    ViewBag.Title = "Ledger Statement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+<script type="text/javascript">
+    $(document).ready(function () {     
+        var LedgerStatement = {
+          
+            Initialize: function () {
+
+                $(document).on('submit', 'form', function () {
+                    var buttons = $(this).find('[type="submit"]');
+
+                    buttons.each(function (btn) {
+                        $(buttons[btn]).prop('disabled', false);
+                    });
+
+                });
+
+
+                $('.input-group.date').datepicker({
+                    todayBtn: "linked",
+                    language: "it",
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd/mm/yyyy'
+                });                                              
+                $('#ddlSubsidyType').change(function (event) {
+                  
+                    $('#searchItem').val('');
+
+                });
+                LedgerStatement.Typehead();
+            },
+                   
+            Typehead: function () {
+              
+                /// Others Account
+                $('#searchItem').typeahead('destroy');
+                $('#searchItem').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength:3
+                },
+                {
+                    items: 8,
+                    name: 'SubsidyId',
+                    displayKey: 'SubsidyName',
+                    property: "SubsidyName",
+                    source: function (UserName, process) {
+                        var url = '@Url.Content("~/SubSidyVM/GetSubsidyByCriteria")';
+                        return $.getJSON(url, { searchItem: $('#searchItem').val(), SubsidyTypeId: $("#ddlSubsidyType").val() }, function (data) {
+                            return process(data);
+
+                        });
+                    },
+                    updater: function (item) {
+                        return item.Name;
+                    }
+                }).on('typeahead:selected', function (obj, datum) {
+
+                   // $("#SubsidyId").val(datum.SubsidyId);
+                    //$("#SubsidyName").val(datum.SubsidyName);
+                    $("#SubsidyId").val(datum.SubsidyAccountId);
+                    //$("#TransactionDet2_SubsidyTypeId").val(datum.SubsidyTypeId);
+                    //$("#TransactionDet_ChequeNo").focus();
+                    //$("#BankName").val(datum.BankName);
+                    //$("#BranchName").val(datum.BranchName);
+                    //$("#BankAccountNo").val(datum.BankAccountNo);
+
+
+                });
+            }
+
+        }
+
+        LedgerStatement.Initialize();
+    });
+
+
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">Ledger Statement</li>
+}
+@*@section title
+    {
+        @ViewBag.Title
+    }*@
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+    .twitter-typeahead {
+        width: 250px;
+    }
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+
+<hr />
+
+@using (Html.BeginForm("LedgerStatement", "FMSReports", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(x=>x.SubsidyId)
+    <div class="panel panel-info">
+
+        <div class="panel-heading">
+            @ViewBag.Title.ToString()
+
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-sm-12">
+                    <fieldset class="fileSets">
+                        <legend class="scheduler-border">Ledger Statement</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Fromdate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                <div class='input-group date'>
+                                    @Html.TextBoxFor(model => model.Fromdate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                                    @Html.ValidationMessageFor(model => model.Fromdate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Todate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                <div class='input-group date'>
+                                    @Html.TextBoxFor(model => model.Todate, new { @class = "form-control", @readonly = "readonly", placeholder = "Enter date here..." })
+                                    @Html.ValidationMessageFor(model => model.Todate)
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar">
+                                        </span>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.SubsidyTypeId, new { @class = "col-sm-4 control-label required" })
+                            <div class="col-sm-4">
+                                @Html.DropDownListFor(model => model.SubsidyTypeId, new SelectList(Model.kvpSubsidyType, "Key", "Value", Model.SubsidyTypeId), "Select Subsidy Type", new {  id = "ddlSubsidyType",@class = "" })
+                                @Html.ValidationMessageFor(model => model.SubsidyTypeId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Subsidy Search", new { @class = "col-sm-4 control-label required" })
+                            <div class=" col-md-4">                               
+                                <input id="searchItem" required class="form-control" type="text" placeholder="Subsidy Search">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-4 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="checkbox block">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.IsApproved) @Html.LabelFor(model => model.IsApproved)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-3">
+                    <div class="btn-toolbar">
+                        <a href="Button" target="_blank">
+
+                            <input type="submit" value="Search" onclick="target= '_blank';" class="btn btn-primary" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/bootstrapth")
+}
+

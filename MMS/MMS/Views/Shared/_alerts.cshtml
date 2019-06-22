@@ -1,0 +1,41 @@
+@using MMS.Utility
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/toastr")
+@Styles.Render("~/Content/css")
+@if (TempData.ContainsKey(Alerts.ATTENTION))
+{
+
+
+    <div class="alert alert-block">
+        <a class="close" href="#">x</a>
+        <h4 class="alert-heading">
+            Attention!
+        </h4>
+        @TempData[Alerts.ATTENTION]
+    </div>
+}
+@foreach (var key in Alerts.ALL.Except(new[] { Alerts.ATTENTION }))
+{
+    if (TempData.ContainsKey(key))
+    {
+        if (key == "success")
+        {
+            <script type="text/javascript">
+                toastr.success('@TempData[key]')
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                toastr.warning('@TempData[key]')
+            </script>
+        }
+        @*<div class="alert alert-@key">
+                <button type="button" class="close">
+                    x</button>
+                @TempData[key]
+            </div>*@
+    }
+}
+@*@Scripts.Render("~/bundles/toastr")*@
+@*@Styles.Render("~/Content/css")*@

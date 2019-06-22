@@ -1,0 +1,103 @@
+﻿
+@model  MMS.Entities.Models.GlobalCompany
+@{
+    ViewBag.Title = "User List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#page-leftbar li").removeClass("active");
+
+        $("#liAdmin").addClass("active");
+        $("#liGlobalCompanySetup").addClass("active");
+    });
+</script>
+
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">User List</li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+<style type="text/css">
+    .form-inline .form-control {
+        width: 100%;
+    }
+
+    .form-inline input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .form-inline .form-group {
+        width: 80%;
+    }
+
+    /*.margin {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }*/
+</style>
+@using (Html.BeginForm("Index", "User", FormMethod.Get))
+{
+   
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.GlobalCompanyName)
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Url)
+                </th>
+
+               
+                <th>
+                    @Html.DisplayNameFor(model => model.Contact)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+          
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.GlobalCompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Url)
+                    </td>
+                   
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Contact)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.IsActive)
+                    </td>
+                    <td>
+
+                        @Html.ActionLink("Edit", "Edit", "GlobalCompany", new { id = @Model.GlobalCompanyId }, new { @class = "btn btn-success" })
+
+                    </td>
+                </tr>
+           
+        <tbody>
+    </table>
+
+}
+
+
+
+

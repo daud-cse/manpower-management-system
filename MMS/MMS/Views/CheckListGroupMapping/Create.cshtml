@@ -1,0 +1,179 @@
+﻿@model MMS.Entities.Models.CheckListGroupMapping
+
+@{
+    ViewBag.Title = "Check List Group Mapping Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var applicantVM = {//checked='checked'
+            checklistTemplate: "<tr><td style='display:none;'><input type='hidden' id='CheckListGroupMapID' name=[CheckListGroupMapIDid].CheckListGroupMapID value=[CheckListGroupMapID]></td> <td style='display:none;'><input type='hidden' id='CheckListGroupID' name=[CheckListGroupIDid].CheckListGroupID value=[CheckListGroupID]></td><td style='display:none;'><input type='hidden' id='CheckListID' name=[CheckListIDid].CheckListID value=[CheckListID]></td><td><input type='checkbox' class='check-box' [checkedid]=[checkedid1] value=[valueIsCheckList]  id=[IsCheckListId]IsCheckList name=[IsCheckListName].IsCheckList onclick='SetIsActiveValue(this)'></td><td>[CheckListName]</td></tr>",
+            applicant: {
+
+            },
+            applicant: [],
+            Initialize: function () {
+
+                $("#page-leftbar li").removeClass("active");
+
+                $("#liAdmin").addClass("active");
+                $("#liCheckListGroupMapping").addClass("active");
+              
+                $('#ddlApplicantTypeId').change(function () {
+                    var applicantTypeId = $('#ddlApplicantTypeId').val();
+                    if (applicantTypeId == 0 || applicantTypeId == '') {
+                        $("#tbCheckList").empty();
+                        return false;
+                    }
+                    applicantVM.GetApplicantTypeWiseCheckListGroupMapping(applicantTypeId);
+                });
+
+            },
+
+            GetApplicantTypeWiseCheckListGroupMapping: function (applicantTypeId) {
+                var applicantID = 0;
+                var url = '@Url.Content("~/CheckListGroupMapping/GetCheckListGroupMappingByTypeId")';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { CheckListGroupId: applicantTypeId},
+                    dataType: "json",
+                    success: function (data) {
+                        $("#tbCheckList").empty();
+                        for (var i = 0; i < data.length; i++) {
+                            var value = '';
+                            if (data[i].IsCheckList == true) {
+                               
+                                value = applicantVM.checklistTemplate.replace("[CheckListGroupMapID]", data[i].CheckListGroupMapID).replace("[CheckListGroupMapIDid]", '[' + i + ']').replace("[CheckListGroupID]", applicantTypeId).replace("[CheckListGroupIDid]", '[' + i + ']').replace("[CheckListID]", data[i].CheckListID).replace("[CheckListIDid]", '[' + i + ']').replace("[CheckListName]", data[i].CheckListName).replace("[IsCheckListName]", '[' + i + ']').replace("[IsCheckListId]", i).replace("[IsCheckList]", data[i].IsCheckList).replace("[valueIsCheckList]", data[i].IsCheckList).replace("[checkedid]", "checked").replace("[checkedid1]", "checked");
+
+                            }
+                            else {
+                                value = applicantVM.checklistTemplate.replace("[CheckListGroupMapID]", data[i].CheckListGroupMapID).replace("[CheckListGroupMapIDid]", '[' + i + ']').replace("[CheckListGroupID]", applicantTypeId).replace("[CheckListGroupIDid]", '[' + i + ']').replace("[CheckListID]", data[i].CheckListID).replace("[CheckListIDid]", '[' + i + ']').replace("[CheckListName]", data[i].CheckListName).replace("[IsCheckListName]", '[' + i + ']').replace("[IsCheckListId]", i).replace("[IsCheckList]", data[i].IsCheckList).replace("[valueIsCheckList]", data[i].IsCheckList).replace("[checkedid]", "").replace("[checkedid1]", "");
+                            }
+                            $("#tbCheckList").prepend(value);
+                        }
+                    },
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            },
+        }
+        applicantVM.Initialize();
+    });
+
+    function SetIsActiveValue(obj) {
+        if (document.getElementById(obj.id).checked) {
+            document.getElementById(obj.id).checked = true;
+            $('#' + obj.id).val(true);
+        }
+        else {
+            document.getElementById(obj.id).checked = false;
+            $('#' + obj.id).val(false);
+        }
+    }
+
+</script>
+
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">Applicant Create</li>
+}
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+
+@*<p> @Html.ActionLink("Go Back to List", "Index", "CheckListGroupMapping", null, new { @class = "btn btn-success btn-large" })</p>
+<hr />*@
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">@ViewBag.Title </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+
+
+                <div class="form-group">
+
+                    @Html.Label("Group Name", new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(model => model.CheckListGroupID, new SelectList(Model.kvpApplicantType, "Key", "Value", Model.CheckListGroupID), "Select Applicant Type", new { @class = "selectpicker show-tick form-control", id = "ddlApplicantTypeId" })
+                        @Html.ValidationMessageFor(model => model.CheckListGroupID)
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <table class="table table-bordered">
+                <tbody id="tbCheckList"></tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="btn-toolbar">
+                <input type="submit" value="Create" class="btn-primary btn" onclick=" return AddConfirm()" />
+            </div>
+        </div>
+    </div>
+
+
+}
+
+
+
+@section Scripts {
+
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+}
+
+
+

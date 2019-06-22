@@ -1,0 +1,217 @@
+﻿@model MMS.Entities.ViewModels.AgentVM
+
+@{
+    ViewBag.Title = "Agent Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $("#page-leftbar li").removeClass("active");
+        $("#liAdmin").addClass("active");
+    });
+
+
+
+</script>
+
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">Agent Setup</li>
+}
+@section title
+{
+    @ViewBag.Title
+}
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+</style>
+<p> @Html.ActionLink("Back to List", "Index", null, null, new { @class = "backTolist" })</p>
+<hr />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        @Html.ValidationSummary(true)
+
+
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.address.Name, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.address.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.address.Name)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.address.Nationality, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.address.Nationality, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.address.Nationality)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.address.NID, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.address.NID, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.address.NID)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.address.Mobile, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.address.Mobile, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.address.Mobile)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.address.MotherName, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.address.MotherName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.address.MotherName)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.address.FatherName, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.address.FatherName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.address.FatherName)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.address.Email, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.address.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.address.Email)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.address.Passport, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.address.Passport, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.address.Passport)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.address.Upazila, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.address.Upazila, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.address.Upazila)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.agent.IsActive, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.agent.IsActive, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.agent.IsActive)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.agent.LicenseNo, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.agent.LicenseNo, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.agent.LicenseNo)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.agent.Description, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.agent.Description, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.agent.Description)
+            </div>
+        </div>
+        @*<div class="form-group">
+
+            @Html.LabelFor(model => model.CountryID, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.DropDownListFor(model => model.CountryID, new SelectList(Model.Countries, "Key", "Value", Model.CountryID), "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CountryID)
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.Email, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.PhoneNo, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.PhoneNo, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PhoneNo)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.BangladeshiAddress, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextAreaFor(model => model.BangladeshiAddress, new { @class = "form-control", style = "width: 550px; height: 100px;" })
+                @Html.ValidationMessageFor(model => model.BangladeshiAddress)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.ForeignAddress, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextAreaFor(model => model.ForeignAddress, new { @class = "form-control", style = "width: 550px; height: 100px;" })
+                @Html.ValidationMessageFor(model => model.ForeignAddress)
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.Description, new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-6">
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", style = "width: 550px; height: 100px;" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>*@
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div class="btn-toolbar">
+                    <input type="submit" value="Create" class="btn-primary btn" onclick=" return AddConfirm()" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

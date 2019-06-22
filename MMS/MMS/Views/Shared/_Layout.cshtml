@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title </title>
+    <link rel="shortcut icon" href="~/assets/img/favicon.png" />
+    
+
+    @Styles.Render("~/bundles/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style type="text/css">
+        .imageprofile {
+            width: 100px;
+        }
+
+        .container {
+            height:2500px;
+            margin-Top:-30px;
+        }
+       
+        .modal {   
+            display:none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba( 255, 255, 255, .8 ) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+        } 
+        #DashBoardLabel {
+            padding: 10px 36px;
+            border: 1px solid #DDE;
+            background-color: #f2f2f2;
+        }
+        body.loading {
+            overflow: hidden;
+        }
+
+            /* Anytime the body has the loading class, our
+   modal element will be visible */
+            body.loading .modal {
+                display: block;
+            }
+    </style>
+</head>
+
+<body >
+    @Html.Partial("_header")
+    <div id="page-container">
+        <!-- BEGIN SIDEBAR -->
+        @Html.Partial("_leftpanel")
+
+        <div id="page-content">
+            <div id="wrap">
+                <div id="page-heading">
+                    <ol class="breadcrumb">
+                        @*<li class="active"><a href="index.htm">Dashboard</a></li>*@
+                        @RenderSection("breadcrumb", required: false)
+                    </ol>
+
+                    <h1>@RenderSection("title", required: false)</h1>
+                    <div class="options">
+                        <div class="btn-toolbar">                          
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+
+                                @Scripts.Render("~/bundles/jquery")
+                                @Scripts.Render("~/bundles/bootstrap")
+                                @Scripts.Render("~/bundles/datePicker")
+                                @Styles.Render("~/Content/datepicker")
+                                
+
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- container -->
+            </div> <!--wrap -->
+        </div>
+       
+        <div id="ajaxLoader" class="modal">
+            <p> @*<img src="~/assets/img/ajax-loader.gif" />*@Please Wait</p>
+        </div>
+    </div>
+    @*@Html.Partial("_Confirmation")*@
+    @Html.Partial("_footer")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+<script type="text/javascript">
+
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+       
+    });
+</script>

@@ -1,0 +1,330 @@
+﻿@model MMS.Entities.ViewModels.SearchPassportInfoVM
+
+@{
+    ViewBag.Title = "Search Passport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/dist/css/bootstrap-select.css">
+<script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+
+        var agentInfo = {
+            listTemplate: "<tr><td>[materialid]</td><td>[material]</td><td>[RequiredQuantity]</td><td>[AvgPrice]</td><td>[UnitofmeasurementName]</td><td><button type='button' class='remove btn btn-danger btn-sm'><span class='glyphicon glyphicon-remove-sign'></span>Delete</button></td></tr>",
+            agent: {
+
+            },
+            agent: [],
+            Initialize: function () {
+
+
+                $("#page-leftbar li").removeClass("active");
+                $("#liApplicant").addClass("active");
+                $("#liCustomerPassport").addClass("active");
+
+
+
+                $("#NationalityId").attr('data-live-search', true);
+                $("#ResidentialUpazilaID").attr('data-live-search', true);
+                $("#UpazilaId").attr('data-live-search', true);
+                $("#DistrictId").attr('data-live-search', true);
+                $("#CountryId").attr('data-live-search', true);
+                $("#CustomerId").attr('data-live-search', true);
+                //$('#PassportExpiryDate').datepicker(); //Initialise any date pickers
+                //$('#PassportIssueDate').datepicker(); //Initialise any date pickers
+                //$('#DateOfBirth').datepicker(); //Initialise any date pickers
+                $('#ReceivedDate').datepicker(); //Initialise any date pickers
+                var optionalLabel = 'Please Select..';
+                $('#ddlDivisionId').change(function (event) {
+
+                    if ($('#ddlDivisionId').val() == '' || $('#ddlDivisionId').val() == null) {
+                        $("#ddlDistrict").empty();
+                        $("#PermanentUpazilaID").empty();
+                        $("#ddlDistrict").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+                        $("#PermanentUpazilaID").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+                        return false;
+                    }
+                    else {
+                        LoadDropDownList('ddlDistrict'
+                     , '@Url.Content("~/District/GetDistrictByDivisionId")?divisionId=' + $('#ddlDivisionId').val()
+                  , "Please Select.."
+                  , null);
+                        $("#PermanentUpazilaID").empty();
+                        $("#PermanentUpazilaID").append($('<option/>', {
+                            value: "",
+                            text: optionalLabel
+                        }));
+
+                    }
+
+
+
+                });
+                //$("#uploadAgentImage").bind("click", function () {
+
+                //});
+                $('#ddlDistrict').change(function (event) {
+                    LoadDropDownList('UpazilaId'
+                       , '@Url.Content("~/Upazila/GetUpazilaByDistrictId")?districtId=' + $('#ddlDistrict').val()
+                    , "Please Select.."
+                    , null);
+                });
+                $("#btnAdd").click(function () {
+
+                });
+
+                $('#applicant_ID').change(function () {
+                    var applicantID = $('#applicant_ID').val();
+
+                    var url = "/LocationChangeVM/GetApplicantLocation?Id=" + $("#applicant_ID").val() + "&IsApplicant=true";
+                    window.location = url;
+                });
+
+
+            },
+            GetAgent: function (id) {
+                var url = '@Url.Content("~/Agent/GetAgent")';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { id: id },
+                    dataType: "json",
+                    success: function (data) {
+
+                        for (var i = 0; i < data.StockOutList.length; i++) {
+                            var value = materialforrequsition.listTemplate.replace("[materialid]", data.StockOutList[i].Material.Id).replace("[material]", data.StockOutList[i].Material.Name).replace("[RequiredQuantity]", data.StockOutList[i].Quantity).replace("[AvgPrice]", data.StockOutList[i].replace("[UnitofmeasurementName]", data.StockOutList[i].Material.Unitofmeasurement.Name));
+                            $("#tbmaterials").prepend(value);
+                        }
+                    },
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            },
+
+        }
+        agentInfo.Initialize();
+
+
+        function AgentImageCheck() {
+            // alert("dsfd");
+            if (typeof ($("#uploadAgentImage")[0].files) != "undefined") {
+                var size = parseFloat($("#uploadAgentImage")[0].files[0].size / 1024).toFixed(2);
+                if (size > 300) {
+                    alert("Image is not greater than 300KB");
+                    return false;
+                }
+                else {
+                    true;
+                }
+                // alert(size + " KB.");
+            } else {
+                alert("This browser does not support HTML5.");
+            }
+        }
+
+    });
+
+
+
+</script>
+
+<script src="~/dist/js/bootstrap-select.js"></script>
+@section breadcrumb
+{
+    <li><a href="~/Dashboard/index">Dashboard</a></li>
+    <li>Administration</li>
+    <li class="active">Agent and Applicant Map</li>
+}
+@*@section title
+    {
+        @ViewBag.Title
+    }*@
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+
+    .backTolist {
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+        .backTolist:hover {
+            text-decoration: none;
+        }
+
+    .fileSets {
+        border: 1px dotted #ddd;
+        margin: 0px 10px 20px 0;
+        padding: 20px 10px 0px 10px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #f00;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+
+@using (Html.BeginForm("GetPassportInfo", "PassportInfo", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">@ViewBag.Title </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CustomerId, new { @class = "col-sm-2 control-label required" })
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(model => model.CustomerId, new SelectList(Model.kvpCustomer, "Key", "Value", Model.CustomerId), "Select Customer", new { })
+                        @Html.ValidationMessageFor(model => model.CustomerId)
+                    </div>
+                    @Html.LabelFor(model => model.DeliverySlipNo, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.DeliverySlipNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DeliverySlipNo)
+                    </div>
+                    @Html.LabelFor(model => model.PassPortTypeId, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(model => model.PassPortTypeId, new SelectList(Model.kvpPassPortType, "Key", "Value", Model.PassPortTypeId), "Select Passport Type", new { })
+                        @Html.ValidationMessageFor(model => model.PassPortTypeId)
+                    </div>
+                  
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MaritalStatusId, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(model => model.MaritalStatusId, new SelectList(Model.kvpMaritalStatus, "Key", "Value", Model.MaritalStatusId), "Select Marital Status", new { })
+                        @Html.ValidationMessageFor(model => model.MaritalStatusId)
+                    </div>
+                    @Html.LabelFor(model => model.SexId, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(model => model.SexId, new SelectList(Model.kvpSex, "Key", "Value", Model.SexId), "Select Sex", new { })
+                        @Html.ValidationMessageFor(model => model.SexId)
+                    </div>
+                    @Html.LabelFor(model => model.RPOTypeId, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(model => model.RPOTypeId, new SelectList(Model.kvpRPOType, "Key", "Value", Model.RPOTypeId), "Select RPO", new { })
+                        @Html.ValidationMessageFor(model => model.RPOTypeId)
+                    </div>
+                    @*@Html.ActionLink("Details", "GetPassportInfoDetails", "MPMSReports", new { CustomerID = @Model.CustomerId, PasportInfoId =0 }, new { target = "_blank" })*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="btn-toolbar">
+                        <input type="submit" value="Search" class="btn-primary btn" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+<table class="table table-hover">
+    <tr>
+
+      
+        <th>
+            Customer Name
+        </th>
+        <th>
+            Owner Name
+        </th>
+        <th>
+            Delivery Slip No
+        </th>
+        <th>
+            New Passport No
+        </th>
+        <th>
+            Delevery Done
+        </th>
+        <th>
+            Received Completed
+        </th>
+        <th>
+            Sex Name
+        </th>
+        <th>
+            RPO Name
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.lstpassportInfo)
+    {
+        <tr>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliverySlipNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NewPassportNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDeliveryDone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsReceivedCompleted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sex.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RPOType.Name)
+            </td>
+            <td>
+
+                @Html.ActionLink("Edit", "Edit", "PassportInfo", new { id = item.ID }, new { @class = "btn btn-success btn-xs" }) <text>|</text>
+
+                @Html.ActionLink("Details", "GetPassportInfoDetails", "MPMSReports", new { CustomerID = item.CustomerId, PasportInfoId = item.ID }, new { target = "_blank" })
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+
+
+
+
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/Mask")
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+}
